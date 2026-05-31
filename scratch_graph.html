@@ -2,6 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="ICON.png">
     <title>複数作品対応 Scratch Tracker</title>
     <style>
         body { font-family: sans-serif; padding: 15px; background: #f5f6fa; margin: 0; }
@@ -54,8 +55,10 @@
             <span style="color:#f1c40f;">● 星の数 (黄)</span>
         </div>
 
-        <div style="margin-top:15px; font-size:12px; font-weight:bold; color:#555;">🔍 デバッグログ：</div>
-        <div id="debugLog">ここにログが表示されます...</div>
+        <div style="margin-top:15px;">
+            <div onclick="toggleDebug()" style="font-size:12px; font-weight:bold; color:#555; cursor:pointer; user-select:none;">🔍 デバッグログ <span id="debugArrow">▶ 開く</span></div>
+            <div id="debugLog" style="display:none;">ここにログが表示されます...</div>
+        </div>
     </div>
     <script>
         const DEFAULT_PROJECTS = [{ id: "1207770778", name: "3Dっぽいプラットフォーマー" }];
@@ -63,8 +66,20 @@
         let autoFetchTimer = null;
 
         function dlog(msg) {
-            const el = document.getElementById('debugLog');
-            el.textContent += '\n' + msg;
+            const el = document.getElementById("debugLog");
+            el.textContent += "\n" + msg;
+        }
+
+        function toggleDebug() {
+            const log = document.getElementById("debugLog");
+            const arrow = document.getElementById("debugArrow");
+            if (log.style.display === "none") {
+                log.style.display = "block";
+                arrow.textContent = "▼ 閉じる";
+            } else {
+                log.style.display = "none";
+                arrow.textContent = "▶ 開く";
+            }
         }
 
         function proxyUrl(apiUrl) {
