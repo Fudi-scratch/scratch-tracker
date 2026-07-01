@@ -7,7 +7,7 @@ on:
   # 手動トリガーも残す
   repository_dispatch:
     types: [update-status]
-      # テスト用：PR がマージされたときも実行
+  # テスト用：PR がマージされたときも実行
   push:
     branches:
       - main
@@ -64,7 +64,6 @@ jobs:
           
           async function main() {
             try {
-              // localStorage の代わりに、前のステータスファイルを読む
               let status = { update: new Date().toISOString(), projects: [] };
               
               if (fs.existsSync('status.json')) {
@@ -72,7 +71,6 @@ jobs:
                 status.projects = existingData.projects || [];
               }
               
-              // HTMLから project list を読むか、環境変数から取得
               const projectList = JSON.parse(process.env.PROJECT_LIST || '[]');
               
               if (projectList.length === 0) {
