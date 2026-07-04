@@ -27,14 +27,14 @@ jobs:
           node-version: '18'
 
       - name: Fetch data from Scratch API
-        id: fetch_data
         run: |
           cat > fetch_data.js << 'EOF'
           const https = require('https');
+          const http = require('http');
           const fs = require('fs');
           
           function proxyUrl(apiUrl) {
-            return `https://corsproxy.io/?${encodeURIComponent(apiUrl)}`;
+            return `https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}`;
           }
           
           async function fetchWithRetry(url, retries = 3) {
@@ -42,18 +42,27 @@ jobs:
               try {
                 return await new Promise((resolve, reject) => {
                   const urlObj = new URL(url);
-                  const protocol = urlObj.protocol === 'https:' ? https : require('http');
-                  protocol.get(url, { timeout: 10000 }, (res) => {
+                  const protocol = urlObj.protocol === 'https:' ? https : http;
+                  const request = protocol.get(url, { timeout: 10000 }, (res) => {
                     let data = '';
                     res.on('data', chunk => { data += chunk; });
                     res.on('end', () => {
                       if (res.statusCode === 200) {
-                        resolve(JSON.parse(data));
+                        try {
+                          resolve(JSON.parse(data));
+                        } catch (e) {
+                          reject(new Error('Invalid JSON response'));
+                        }
                       } else {
                         reject(new Error(`HTTP ${res.statusCode}`));
                       }
                     });
-                  }).on('error', reject);
+                  });
+                  request.on('error', reject);
+                  request.on('timeout', () => {
+                    request.destroy();
+                    reject(new Error('Request timeout'));
+                  });
                 });
               } catch (e) {
                 console.log(`Retry ${i + 1}/${retries} for URL`);
@@ -85,7 +94,14 @@ jobs:
               const results = await Promise.all(projectList.map(async (project) => {
                 try {
                   const url = proxyUrl(`https://api.scratch.mit.edu/projects/${project.id}`);
-                  const data = await fetchWithRetry(url);
+                  const response = await fetchWithRetry(url);
+                  
+                  let data;
+                  if (response.contents) {
+                    data = JSON.parse(response.contents);
+                  } else {
+                    data = response;
+                  }
                   
                   const today = new Date().toISOString().split('T')[0];
                   const newRecord = {
@@ -137,5 +153,5 @@ jobs:
       - name: Commit and Push
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "Update status.json $(date +'%Y-%m-%d %H:%M:%S')"
+          commit_message: "Update status.json"
           file_pattern: status.json
