@@ -2,15 +2,16 @@ name: Update status.json
 
 on:
   schedule:
-    # 毎日 09:00 UTC (日本時間 18:00) に実行
     - cron: '0 9 * * *'
-  # 手動トリガーも残す
   repository_dispatch:
     types: [update-status]
-  # テスト用：PR がマージされたときも実行
   push:
     branches:
       - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   update:
@@ -134,9 +135,7 @@ jobs:
           PROJECT_LIST: ${{ secrets.SCRATCH_PROJECT_LIST }}
 
       - name: Commit and Push
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add status.json
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Update status.json $(date +'%Y-%m-%d %H:%M:%S')" && 
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/Fudi-scratch/scratch-tracker.git
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Update status.json $(date +'%Y-%m-%d %H:%M:%S')"
+          file_pattern: status.json
