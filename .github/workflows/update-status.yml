@@ -1,154 +1,31 @@
 name: Update status.json
-
 on:
   schedule:
-    - cron: '0 9 * * *'
-  repository_dispatch:
-    types: [update-status]
-  push:
-    branches:
-      - main
+    - cron: '0 3 * * *'
   workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  update:
+  update-status:
     runs-on: ubuntu-latest
-
+    concurrency: update-status-${{ github.ref }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '18'
 
-      - name: Fetch data from Scratch API
+      - name: Fetch project list
         run: |
-          cat > fetch_data.js << 'EOF'
-          const https = require('https');
-          const http = require('http');
-          const fs = require('fs');
-          
-          function proxyUrl(apiUrl) {
-            return `https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}`;
-          }
-          
-          async function fetchWithRetry(url, retries = 3) {
-            for (let i = 0; i < retries; i++) {
-              try {
-                return await new Promise((resolve, reject) => {
-                  const urlObj = new URL(url);
-                  const protocol = urlObj.protocol === 'https:' ? https : http;
-                  const request = protocol.get(url, { timeout: 10000 }, (res) => {
-                    let data = '';
-                    res.on('data', chunk => { data += chunk; });
-                    res.on('end', () => {
-                      if (res.statusCode === 200) {
-                        try {
-                          resolve(JSON.parse(data));
-                        } catch (e) {
-                          reject(new Error('Invalid JSON response'));
-                        }
-                      } else {
-                        reject(new Error(`HTTP ${res.statusCode}`));
-                      }
-                    });
-                  });
-                  request.on('error', reject);
-                  request.on('timeout', () => {
-                    request.destroy();
-                    reject(new Error('Request timeout'));
-                  });
-                });
-              } catch (e) {
-                console.log(`Retry ${i + 1}/${retries} for URL`);
-                if (i === retries - 1) throw e;
-                await new Promise(r => setTimeout(r, 2000));
-              }
-            }
-          }
-          
-          async function main() {
-            try {
-              let status = { update: new Date().toISOString(), projects: [] };
-              
-              if (fs.existsSync('status.json')) {
-                const existingData = JSON.parse(fs.readFileSync('status.json', 'utf-8'));
-                status.projects = existingData.projects || [];
-              }
-              
-              const projectList = JSON.parse(process.env.PROJECT_LIST || '[]');
-              
-              if (projectList.length === 0) {
-                console.log('No projects to fetch');
-                fs.writeFileSync('status.json', JSON.stringify(status, null, 2));
-                return;
-              }
-              
-              console.log(`Fetching data for ${projectList.length} projects...`);
-              
-              const results = await Promise.all(projectList.map(async (project) => {
-                try {
-                  const url = proxyUrl(`https://api.scratch.mit.edu/projects/${project.id}`);
-                  const response = await fetchWithRetry(url);
-                  
-                  let data;
-                  if (response.contents) {
-                    data = JSON.parse(response.contents);
-                  } else {
-                    data = response;
-                  }
-                  
-                  const today = new Date().toISOString().split('T')[0];
-                  const newRecord = {
-                    date: today,
-                    views: parseInt(data?.stats?.views) || 0,
-                    loves: parseInt(data?.stats?.loves) || 0,
-                    favorites: parseInt(data?.stats?.favorites) || 0
-                  };
-                  
-                  let projectHistory = status.projects.find(p => p.id === project.id);
-                  if (!projectHistory) {
-                    projectHistory = { id: project.id, name: project.name, data: [] };
-                    status.projects.push(projectHistory);
-                  }
-                  
-                  if (projectHistory.data.length > 0 && projectHistory.data[projectHistory.data.length - 1].date === today) {
-                    projectHistory.data[projectHistory.data.length - 1] = newRecord;
-                  } else {
-                    projectHistory.data.push(newRecord);
-                  }
-                  
-                  console.log(`✓ ${project.name}: views=${newRecord.views}, loves=${newRecord.loves}, favs=${newRecord.favorites}`);
-                  return { success: true, name: project.name };
-                } catch (e) {
-                  console.error(`✗ Failed to fetch ${project.id}: ${e.message}`);
-                  return { success: false, name: project.name };
-                }
-              }));
-              
-              const successCount = results.filter(r => r.success).length;
-              console.log(`\n✅ Fetched ${successCount}/${projectList.length} projects`);
-              
-              status.update = new Date().toISOString();
-              fs.writeFileSync('status.json', JSON.stringify(status, null, 2));
-              console.log('status.json saved!');
-              
-            } catch (e) {
-              console.error('Fatal error:', e);
-              process.exit(1);
-            }
-          }
-          
-          main();
-          EOF
-          node fetch_data.js
-        env:
-          PROJECT_LIST: ${{ secrets.SCRATCH_PROJECT_LIST }}
+          node .github/scripts/fetch_projects.js fudefu > projects.json
+
+      - name: Run fetch and update status
+        run: |
+          # fetch_data.js は projects.json を参照するように作っておく（フォールバック付き）
+          node .github/scripts/fetch_data.js
 
       - name: Commit and Push
         uses: stefanzweifel/git-auto-commit-action@v5
