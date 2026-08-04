@@ -1,11 +1,9 @@
 #!/usr/bin/env node
-// Usage: node fetch_projects.js <username> [maxProjects]
+// Usage: node .github/scripts/fetch_projects.js <username> [maxProjects]
 // Outputs JSON array [{"id":123,"name":"..."}] to stdout.
-const fs = require('fs');
-
 const username = process.argv[2];
 if (!username) {
-  console.error('Usage: node fetch_projects.js <username> [maxProjects]');
+  console.error('Usage: node .github/scripts/fetch_projects.js <username> [maxProjects]');
   process.exit(1);
 }
 const maxProjects = parseInt(process.argv[3], 10) || 200;
@@ -25,7 +23,7 @@ async function main() {
       if (!data || data.length === 0) break;
       all = all.concat(data);
       if (data.length < limit) break;
-      await new Promise(r => setTimeout(r, 300)); // 軽い待ち
+      await new Promise(r => setTimeout(r, 300));
     } catch (err) {
       console.error(`Fetch error (offset ${offset}):`, err);
       break;
