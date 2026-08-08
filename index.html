@@ -89,6 +89,23 @@
         const DEFAULT_PROJECTS = [{ id: "1207770778", name: "3Dっぽいプラットフォーマー" }];
         let currentProjectId = "1207770778";
         let autoFetchTimer = null;
+        // === status.json を扱うグローバル ===
+        let STATUS_DATA = { update: null, projects: [] };
+
+async function loadStatusJson() {
+  try {
+    const res = await fetch('/status.json', { cache: 'no-cache' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    STATUS_DATA = {
+      update: data.update || null,
+      projects: Array.isArray(data.projects) ? data.projects : []
+    };
+  } catch (e) {
+    console.error('status.json load error:', e);
+    STATUS_DATA = { update: null, projects: [] };
+  }
+}
 
         function dlog(msg) {
             const el = document.getElementById("debugLog");
@@ -131,46 +148,63 @@
             return `https://corsproxy.io/?${encodeURIComponent(apiUrl)}`;
         }
 
-        window.onload = function() {
-            initProjectList();
-            // PAT トークンをローカルストレージから復元
-            const savedPat = localStorage.getItem('scratch_github_pat');
-            if (savedPat) {
-                document.getElementById('patToken').value = savedPat;
-            }
-            // PAT 変更時に保存
-            document.getElementById('patToken').addEventListener('change', function() {
-                localStorage.setItem('scratch_github_pat', this.value);
-            });
+window.onload = async function() {
+  // PAT はそのまま復元してよいので残す（必要なければ削除してください）
+  const savedPat = localStorage.getItem('scratch_github_pat');
+  if (savedPat) {
+    document.getElementById('patToken').value = savedPat;
+  }
+  document.getElementById('patToken').addEventListener('change', function() {
+    localStorage.setItem('scratch_github_pat', this.value);
+  });
 
-            const savedLastId = localStorage.getItem('scratch_last_selected_id');
-            if (savedLastId) {
-                currentProjectId = savedLastId;
-                const select = document.getElementById('projectSelect');
-                if (Array.from(select.options).some(opt => opt.value === String(currentProjectId))) {
-                    select.value = currentProjectId;
-                }
-            }
-            changeProject();
-        };
+  // プロジェクト一覧を status.json から初期化して表示
+  await initProjectList();
 
-        function initProjectList() {
-            let plist = JSON.parse(localStorage.getItem('scratch_project_list'));
-            if (!plist || plist.length === 0) {
-                plist = DEFAULT_PROJECTS;
-                localStorage.setItem('scratch_project_list', JSON.stringify(plist));
-            }
-            const select = document.getElementById('projectSelect');
-            select.innerHTML = '';
-            plist.forEach(p => {
-                if (p.id) {
-                    const opt = document.createElement('option');
-                    opt.value = String(p.id).trim();
-                    opt.innerText = `${p.name} (${p.id})`;
-                    select.appendChild(opt);
-                }
-            });
-        }
+  // select に合わせてタイトルを更新（存在すれば）
+  const select = document.getElementById('projectSelect');
+  if (select.options.length > 0) {
+    const opt = Array.from(select.options).find(o => o.value === String(currentProjectId));
+    if (opt) document.getElementById('currentTitle').innerText = opt.text;
+    else document.getElementById('currentTitle').innerText = select.options[0].text;
+  }
+
+  changeProject();
+};
+
+async function initProjectList() {
+  // status.json を読み込んでプロジェクト一覧を作る
+  await loadStatusJson();
+
+  let plist = Array.isArray(STATUS_DATA.projects) ? STATUS_DATA.projects.slice() : [];
+  if (!plist || plist.length === 0) {
+    // フォールバック: DEFAULT_PROJECTS を使う
+    plist = DEFAULT_PROJECTS.slice();
+  }
+
+  const select = document.getElementById('projectSelect');
+  select.innerHTML = '';
+  plist.forEach(p => {
+    if (p && p.id) {
+      const opt = document.createElement('option');
+      opt.value = String(p.id).trim();
+      opt.innerText = `${p.name || ''} (${p.id})`;
+      select.appendChild(opt);
+    }
+  });
+
+  // currentProjectId が未設定なら先頭を選ぶ
+  if ((!currentProjectId || currentProjectId === '') && select.options.length > 0) {
+    currentProjectId = select.options[0].value;
+  }
+
+  // savedLastId があれば選択（以前の選択を尊重）
+  const savedLastId = localStorage.getItem('scratch_last_selected_id');
+  if (savedLastId && Array.from(select.options).some(opt => opt.value === String(savedLastId))) {
+    currentProjectId = String(savedLastId);
+    select.value = currentProjectId;
+  }
+}
 
         function searchProjects() {
             const query = document.getElementById('searchInput').value.trim().toLowerCase();
@@ -423,62 +457,60 @@
             drawChart();
         }
 
-        function drawChart() {
-            const storageKey = `scratch_history_${currentProjectId}`;
-            const savedData = JSON.parse(localStorage.getItem(storageKey)) || [];
-            const svg = document.getElementById('lineChart');
-            svg.innerHTML = '';
-            if (savedData.length < 1) return;
+function drawChart() {
+  // status.json の STATUS_DATA から currentProjectId のデータを使う
+  const project = STATUS_DATA.projects.find(p => String(p.id) === String(currentProjectId));
+  const savedData = (project && Array.isArray(project.data)) ? project.data : [];
 
-            const width = svg.clientWidth || 600;
-            const height = svg.clientHeight || 250;
-            const padding = 20;
+  const svg = document.getElementById('lineChart');
+  svg.innerHTML = '';
+  if (savedData.length < 1) return;
 
-            const allViews = savedData.map(d => d.views);
-            const maxViews = Math.max(...allViews) || 10;
-            const minViews = Math.min(...allViews) || 0;
-            const viewRange = (maxViews - minViews) === 0 ? 10 : (maxViews - minViews);
+  const width = svg.clientWidth || 600;
+  const height = svg.clientHeight || 250;
+  const padding = 20;
 
-            const allLoves = savedData.map(d => d.loves);
-            const maxLoves = Math.max(...allLoves) || 10;
-            const minLoves = Math.min(...allLoves) || 0;
-            const loveRange = (maxLoves - minLoves) === 0 ? 10 : (maxLoves - minLoves);
+  const allViews = savedData.map(d => d.views);
+  const maxViews = Math.max(...allViews) || 10;
+  const minViews = Math.min(...allViews) || 0;
+  const viewRange = (maxViews - minViews) === 0 ? 10 : (maxViews - minViews);
 
-            const allFavs = savedData.map(d => d.favorites);
-            const maxFavs = Math.max(...allFavs) || 10;
-            const minFavs = Math.min(...allFavs) || 0;
-            const favRange = (maxFavs - minFavs) === 0 ? 10 : (maxFavs - minFavs);
+  const allLoves = savedData.map(d => d.loves);
+  const maxLoves = Math.max(...allLoves) || 10;
+  const minLoves = Math.min(...allLoves) || 0;
+  const loveRange = (maxLoves - minLoves) === 0 ? 10 : (maxLoves - minLoves);
 
-            const totalPoints = savedData.length;
-            const xStep = totalPoints > 1 ? (width - padding * 2) / (totalPoints - 1) : (width - padding * 2);
+  const allFavs = savedData.map(d => d.favorites);
+  const maxFavs = Math.max(...allFavs) || 10;
+  const minFavs = Math.min(...allFavs) || 0;
+  const favRange = (maxFavs - minFavs) === 0 ? 10 : (maxFavs - minFavs);
 
-            let viewPoints = [], lovePoints = [], favPoints = [];
-            savedData.forEach((item, index) => {
-                const x = totalPoints > 1 ? padding + index * xStep : width / 2;
-                const yView = height - padding - ((item.views - minViews) / viewRange) * (height - padding * 2);
-                const yLove = height - padding - ((item.loves - minLoves) / loveRange) * (height - padding * 2);
-                const yFav  = height - padding - ((item.favorites - minFavs) / favRange) * (height - padding * 2);
-                viewPoints.push(`${x},${yView}`);
-                lovePoints.push(`${x},${yLove}`);
-                favPoints.push(`${x},${yFav}`);
-                if (totalPoints <= 7 || index === 0 || index === totalPoints - 1) {
-                    createSvgText(svg, x, height + 15, item.date.slice(5), '#777');
+  const totalPoints = savedData.length;
+  const xStep = totalPoints > 1 ? (width - padding * 2) / (totalPoints - 1) : (width - padding * 2);
 
-                    // 3種類すべての数値を表示
-                    createSvgText(svg, x, yView - 8, item.views, '#3498db');
-                    createSvgText(svg, x, yLove - 8, item.loves, '#2ecc71');
-                    createSvgText(svg, x, yFav - 8, item.favorites, '#f1c40f');
-                }
-                createSvgCircle(svg, x, yView, '#3498db');
-                createSvgCircle(svg, x, yLove, '#2ecc71');
-                createSvgCircle(svg, x, yFav, '#f1c40f');
-            });
-            if (totalPoints > 1) {
-                createSvgLine(svg, viewPoints.join(' '), '#3498db', 3);
-                createSvgLine(svg, lovePoints.join(' '), '#2ecc71', 2);
-                createSvgLine(svg, favPoints.join(' '), '#f1c40f', 2);
-            }
-        }
+  let viewPoints = [], lovePoints = [], favPoints = [];
+  savedData.forEach((item, index) => {
+    const x = totalPoints > 1 ? padding + index * xStep : width / 2;
+    const yView = height - padding - ((item.views - minViews) / viewRange) * (height - padding * 2);
+    const yLove = height - padding - ((item.loves - minLoves) / loveRange) * (height - padding * 2);
+    const yFav  = height - padding - ((item.favorites - minFavs) / favRange) * (height - padding * 2);
+    viewPoints.push(`${x},${yView}`);
+    lovePoints.push(`${x},${yLove}`);
+    favPoints.push(`${x},${yFav}`);
+    if (totalPoints <= 7 || index === 0 || index === totalPoints - 1) {
+      createSvgText(svg, x, height + 15, item.date.slice(5), '#777');
+      createSvgText(svg, x, yView - 8, item.views, '#3498db');
+    }
+    createSvgCircle(svg, x, yView, '#3498db');
+    createSvgCircle(svg, x, yLove, '#2ecc71');
+    createSvgCircle(svg, x, yFav, '#f1c40f');
+  });
+  if (totalPoints > 1) {
+    createSvgLine(svg, viewPoints.join(' '), '#3498db', 3);
+    createSvgLine(svg, lovePoints.join(' '), '#2ecc71', 2);
+    createSvgLine(svg, favPoints.join(' '), '#f1c40f', 2);
+  }
+}
 
         function createSvgLine(svg, points, color, width) {
             const line = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
@@ -501,48 +533,47 @@
             text.textContent = textContent; svg.appendChild(text);
         }
 
-        function exportTxt() {
-            const plist = JSON.parse(localStorage.getItem('scratch_project_list')) || [];
-            if (plist.length === 0) { alert('登録されている作品がありません。'); return; }
+function exportTxt() {
+  const plist = Array.isArray(STATUS_DATA.projects) && STATUS_DATA.projects.length ? STATUS_DATA.projects : DEFAULT_PROJECTS;
+  if (plist.length === 0) { alert('登録されている作品がありません。'); return; }
 
-            const allDataMap = {};
-            const allDatesSet = new Set();
-            plist.forEach(p => {
-                const key = `scratch_history_${p.id}`;
-                const data = JSON.parse(localStorage.getItem(key)) || [];
-                allDataMap[p.id] = {};
-                data.forEach(record => {
-                    allDataMap[p.id][record.date] = record;
-                    allDatesSet.add(record.date);
-                });
-            });
+  const allDataMap = {};
+  const allDatesSet = new Set();
+  plist.forEach(p => {
+    const data = p.data || [];
+    allDataMap[p.id] = {};
+    data.forEach(record => {
+      allDataMap[p.id][record.date] = record;
+      allDatesSet.add(record.date);
+    });
+  });
 
-            const allDates = Array.from(allDatesSet).sort();
+  const allDates = Array.from(allDatesSet).sort();
 
-            const blocks = plist.map(p => {
-                let lines = [p.name];
-                allDates.forEach(date => {
-                    const record = allDataMap[p.id][date];
-                    if (record) {
-                        lines.push(String(record.views));
-                        lines.push(String(record.loves));
-                        lines.push(String(record.favorites));
-                    } else {
-                        lines.push('');
-                        lines.push('');
-                        lines.push('');
-                    }
-                });
-                return lines.join('\n');
-            });
+  const blocks = plist.map(p => {
+    let lines = [p.name || ('作品 ' + p.id)];
+    allDates.forEach(date => {
+      const record = allDataMap[p.id][date];
+      if (record) {
+        lines.push(String(record.views));
+        lines.push(String(record.loves));
+        lines.push(String(record.favorites));
+      } else {
+        lines.push('');
+        lines.push('');
+        lines.push('');
+      }
+    });
+    return lines.join('\n');
+  });
 
-            const output = blocks.join('\n\n');
-            const blob = new Blob([output], { type: 'text/plain' });
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = 'scratch_stats.txt';
-            a.click();
-        }
+  const output = blocks.join('\n\n');
+  const blob = new Blob([output], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'scratch_stats.txt';
+  a.click();
+}
     </script>
 </body>
 </html>
