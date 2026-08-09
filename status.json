@@ -1,5 +1,5 @@
 {
-  "update": "2026-08-08T04:09:56.809Z",
+  "update": "2026-08-09T04:17:12.673Z",
   "projects": [
     {
       "id": 1338207888,
@@ -31,6 +31,12 @@
         },
         {
           "date": "2026-08-08",
+          "views": 20,
+          "loves": 4,
+          "favorites": 4
+        },
+        {
+          "date": "2026-08-09",
           "views": 20,
           "loves": 4,
           "favorites": 4
@@ -70,6 +76,12 @@
           "views": 20,
           "loves": 0,
           "favorites": 0
+        },
+        {
+          "date": "2026-08-09",
+          "views": 21,
+          "loves": 0,
+          "favorites": 0
         }
       ]
     },
@@ -103,6 +115,12 @@
         },
         {
           "date": "2026-08-08",
+          "views": 17,
+          "loves": 2,
+          "favorites": 2
+        },
+        {
+          "date": "2026-08-09",
           "views": 17,
           "loves": 2,
           "favorites": 2
@@ -142,6 +160,12 @@
           "views": 36,
           "loves": 3,
           "favorites": 3
+        },
+        {
+          "date": "2026-08-09",
+          "views": 36,
+          "loves": 3,
+          "favorites": 3
         }
       ]
     },
@@ -175,6 +199,12 @@
         },
         {
           "date": "2026-08-08",
+          "views": 26,
+          "loves": 4,
+          "favorites": 3
+        },
+        {
+          "date": "2026-08-09",
           "views": 26,
           "loves": 4,
           "favorites": 3
@@ -214,6 +244,12 @@
           "views": 13,
           "loves": 1,
           "favorites": 1
+        },
+        {
+          "date": "2026-08-09",
+          "views": 13,
+          "loves": 1,
+          "favorites": 1
         }
       ]
     },
@@ -247,6 +283,12 @@
         },
         {
           "date": "2026-08-08",
+          "views": 15,
+          "loves": 3,
+          "favorites": 3
+        },
+        {
+          "date": "2026-08-09",
           "views": 15,
           "loves": 3,
           "favorites": 3
@@ -286,6 +328,12 @@
           "views": 20,
           "loves": 2,
           "favorites": 2
+        },
+        {
+          "date": "2026-08-09",
+          "views": 20,
+          "loves": 2,
+          "favorites": 2
         }
       ]
     },
@@ -319,6 +367,12 @@
         },
         {
           "date": "2026-08-08",
+          "views": 16,
+          "loves": 2,
+          "favorites": 2
+        },
+        {
+          "date": "2026-08-09",
           "views": 16,
           "loves": 2,
           "favorites": 2
@@ -358,6 +412,12 @@
           "views": 67,
           "loves": 12,
           "favorites": 12
+        },
+        {
+          "date": "2026-08-09",
+          "views": 67,
+          "loves": 12,
+          "favorites": 12
         }
       ]
     },
@@ -391,6 +451,12 @@
         },
         {
           "date": "2026-08-08",
+          "views": 32,
+          "loves": 4,
+          "favorites": 4
+        },
+        {
+          "date": "2026-08-09",
           "views": 32,
           "loves": 4,
           "favorites": 4
@@ -430,6 +496,12 @@
           "views": 28,
           "loves": 6,
           "favorites": 6
+        },
+        {
+          "date": "2026-08-09",
+          "views": 28,
+          "loves": 6,
+          "favorites": 6
         }
       ]
     },
@@ -463,6 +535,12 @@
         },
         {
           "date": "2026-08-08",
+          "views": 23,
+          "loves": 3,
+          "favorites": 3
+        },
+        {
+          "date": "2026-08-09",
           "views": 23,
           "loves": 3,
           "favorites": 3
@@ -502,6 +580,12 @@
           "views": 24,
           "loves": 3,
           "favorites": 3
+        },
+        {
+          "date": "2026-08-09",
+          "views": 24,
+          "loves": 3,
+          "favorites": 3
         }
       ]
     },
@@ -535,6 +619,12 @@
         },
         {
           "date": "2026-08-08",
+          "views": 10,
+          "loves": 3,
+          "favorites": 4
+        },
+        {
+          "date": "2026-08-09",
           "views": 10,
           "loves": 3,
           "favorites": 4
@@ -574,6 +664,12 @@
           "views": 20,
           "loves": 4,
           "favorites": 4
+        },
+        {
+          "date": "2026-08-09",
+          "views": 20,
+          "loves": 4,
+          "favorites": 4
         }
       ]
     },
@@ -610,6 +706,12 @@
           "views": 104,
           "loves": 15,
           "favorites": 12
+        },
+        {
+          "date": "2026-08-09",
+          "views": 105,
+          "loves": 15,
+          "favorites": 12
         }
       ]
     },
@@ -643,6 +745,12 @@
         },
         {
           "date": "2026-08-08",
+          "views": 28,
+          "loves": 3,
+          "favorites": 4
+        },
+        {
+          "date": "2026-08-09",
           "views": 28,
           "loves": 3,
           "favorites": 4
@@ -682,6 +790,12 @@
           "views": 29,
           "loves": 4,
           "favorites": 4
+        },
+        {
+          "date": "2026-08-09",
+          "views": 29,
+          "loves": 4,
+          "favorites": 4
         }
       ]
     },
@@ -715,6 +829,12 @@
         },
         {
           "date": "2026-08-08",
+          "views": 13,
+          "loves": 5,
+          "favorites": 5
+        },
+        {
+          "date": "2026-08-09",
           "views": 13,
           "loves": 5,
           "favorites": 5
@@ -754,6 +874,12 @@
           "views": 7,
           "loves": 3,
           "favorites": 4
+        },
+        {
+          "date": "2026-08-09",
+          "views": 7,
+          "loves": 3,
+          "favorites": 4
         }
       ]
     },
@@ -787,6 +913,12 @@
         },
         {
           "date": "2026-08-08",
+          "views": 20,
+          "loves": 3,
+          "favorites": 3
+        },
+        {
+          "date": "2026-08-09",
           "views": 20,
           "loves": 3,
           "favorites": 3
@@ -826,6 +958,12 @@
           "views": 30,
           "loves": 5,
           "favorites": 5
+        },
+        {
+          "date": "2026-08-09",
+          "views": 30,
+          "loves": 5,
+          "favorites": 5
         }
       ]
     },
@@ -859,6 +997,12 @@
         },
         {
           "date": "2026-08-08",
+          "views": 19,
+          "loves": 3,
+          "favorites": 3
+        },
+        {
+          "date": "2026-08-09",
           "views": 19,
           "loves": 3,
           "favorites": 3
@@ -898,6 +1042,12 @@
           "views": 21,
           "loves": 4,
           "favorites": 4
+        },
+        {
+          "date": "2026-08-09",
+          "views": 21,
+          "loves": 4,
+          "favorites": 4
         }
       ]
     },
@@ -931,6 +1081,12 @@
         },
         {
           "date": "2026-08-08",
+          "views": 9,
+          "loves": 5,
+          "favorites": 5
+        },
+        {
+          "date": "2026-08-09",
           "views": 9,
           "loves": 5,
           "favorites": 5
@@ -970,6 +1126,12 @@
           "views": 18,
           "loves": 3,
           "favorites": 4
+        },
+        {
+          "date": "2026-08-09",
+          "views": 18,
+          "loves": 3,
+          "favorites": 4
         }
       ]
     },
@@ -1003,6 +1165,12 @@
         },
         {
           "date": "2026-08-08",
+          "views": 59,
+          "loves": 10,
+          "favorites": 10
+        },
+        {
+          "date": "2026-08-09",
           "views": 59,
           "loves": 10,
           "favorites": 10
@@ -1042,6 +1210,12 @@
           "views": 17,
           "loves": 3,
           "favorites": 3
+        },
+        {
+          "date": "2026-08-09",
+          "views": 17,
+          "loves": 3,
+          "favorites": 3
         }
       ]
     },
@@ -1075,6 +1249,12 @@
         },
         {
           "date": "2026-08-08",
+          "views": 23,
+          "loves": 4,
+          "favorites": 5
+        },
+        {
+          "date": "2026-08-09",
           "views": 23,
           "loves": 4,
           "favorites": 5
@@ -1114,6 +1294,12 @@
           "views": 48,
           "loves": 4,
           "favorites": 4
+        },
+        {
+          "date": "2026-08-09",
+          "views": 48,
+          "loves": 4,
+          "favorites": 4
         }
       ]
     },
@@ -1147,6 +1333,12 @@
         },
         {
           "date": "2026-08-08",
+          "views": 47,
+          "loves": 1,
+          "favorites": 1
+        },
+        {
+          "date": "2026-08-09",
           "views": 47,
           "loves": 1,
           "favorites": 1
@@ -1186,6 +1378,12 @@
           "views": 19,
           "loves": 3,
           "favorites": 3
+        },
+        {
+          "date": "2026-08-09",
+          "views": 19,
+          "loves": 3,
+          "favorites": 3
         }
       ]
     },
@@ -1219,6 +1417,12 @@
         },
         {
           "date": "2026-08-08",
+          "views": 18,
+          "loves": 3,
+          "favorites": 3
+        },
+        {
+          "date": "2026-08-09",
           "views": 18,
           "loves": 3,
           "favorites": 3
@@ -1258,6 +1462,12 @@
           "views": 22,
           "loves": 6,
           "favorites": 6
+        },
+        {
+          "date": "2026-08-09",
+          "views": 22,
+          "loves": 6,
+          "favorites": 6
         }
       ]
     },
@@ -1291,6 +1501,12 @@
         },
         {
           "date": "2026-08-08",
+          "views": 18,
+          "loves": 5,
+          "favorites": 5
+        },
+        {
+          "date": "2026-08-09",
           "views": 18,
           "loves": 5,
           "favorites": 5
@@ -1330,6 +1546,12 @@
           "views": 24,
           "loves": 3,
           "favorites": 3
+        },
+        {
+          "date": "2026-08-09",
+          "views": 24,
+          "loves": 3,
+          "favorites": 3
         }
       ]
     },
@@ -1363,6 +1585,12 @@
         },
         {
           "date": "2026-08-08",
+          "views": 22,
+          "loves": 5,
+          "favorites": 6
+        },
+        {
+          "date": "2026-08-09",
           "views": 22,
           "loves": 5,
           "favorites": 6
@@ -1402,6 +1630,12 @@
           "views": 142,
           "loves": 13,
           "favorites": 12
+        },
+        {
+          "date": "2026-08-09",
+          "views": 142,
+          "loves": 13,
+          "favorites": 12
         }
       ]
     },
@@ -1435,6 +1669,12 @@
         },
         {
           "date": "2026-08-08",
+          "views": 34,
+          "loves": 8,
+          "favorites": 7
+        },
+        {
+          "date": "2026-08-09",
           "views": 34,
           "loves": 8,
           "favorites": 7
@@ -1474,6 +1714,12 @@
           "views": 34,
           "loves": 6,
           "favorites": 6
+        },
+        {
+          "date": "2026-08-09",
+          "views": 34,
+          "loves": 6,
+          "favorites": 6
         }
       ]
     },
@@ -1507,6 +1753,12 @@
         },
         {
           "date": "2026-08-08",
+          "views": 106,
+          "loves": 11,
+          "favorites": 12
+        },
+        {
+          "date": "2026-08-09",
           "views": 106,
           "loves": 11,
           "favorites": 12
@@ -1546,6 +1798,12 @@
           "views": 14,
           "loves": 3,
           "favorites": 3
+        },
+        {
+          "date": "2026-08-09",
+          "views": 14,
+          "loves": 3,
+          "favorites": 3
         }
       ]
     },
@@ -1579,6 +1837,12 @@
         },
         {
           "date": "2026-08-08",
+          "views": 37,
+          "loves": 5,
+          "favorites": 6
+        },
+        {
+          "date": "2026-08-09",
           "views": 37,
           "loves": 5,
           "favorites": 6
@@ -1618,6 +1882,12 @@
           "views": 16,
           "loves": 6,
           "favorites": 6
+        },
+        {
+          "date": "2026-08-09",
+          "views": 16,
+          "loves": 6,
+          "favorites": 6
         }
       ]
     },
@@ -1651,6 +1921,12 @@
         },
         {
           "date": "2026-08-08",
+          "views": 24,
+          "loves": 5,
+          "favorites": 6
+        },
+        {
+          "date": "2026-08-09",
           "views": 24,
           "loves": 5,
           "favorites": 6
@@ -1690,6 +1966,12 @@
           "views": 28,
           "loves": 6,
           "favorites": 7
+        },
+        {
+          "date": "2026-08-09",
+          "views": 28,
+          "loves": 6,
+          "favorites": 7
         }
       ]
     },
@@ -1723,6 +2005,12 @@
         },
         {
           "date": "2026-08-08",
+          "views": 17,
+          "loves": 6,
+          "favorites": 6
+        },
+        {
+          "date": "2026-08-09",
           "views": 17,
           "loves": 6,
           "favorites": 6
@@ -1762,6 +2050,12 @@
           "views": 9,
           "loves": 4,
           "favorites": 5
+        },
+        {
+          "date": "2026-08-09",
+          "views": 9,
+          "loves": 4,
+          "favorites": 5
         }
       ]
     },
@@ -1795,6 +2089,12 @@
         },
         {
           "date": "2026-08-08",
+          "views": 15,
+          "loves": 7,
+          "favorites": 7
+        },
+        {
+          "date": "2026-08-09",
           "views": 15,
           "loves": 7,
           "favorites": 7
@@ -1834,6 +2134,12 @@
           "views": 28,
           "loves": 7,
           "favorites": 7
+        },
+        {
+          "date": "2026-08-09",
+          "views": 28,
+          "loves": 7,
+          "favorites": 7
         }
       ]
     },
@@ -1867,6 +2173,12 @@
         },
         {
           "date": "2026-08-08",
+          "views": 16,
+          "loves": 5,
+          "favorites": 5
+        },
+        {
+          "date": "2026-08-09",
           "views": 16,
           "loves": 5,
           "favorites": 5
@@ -1906,6 +2218,12 @@
           "views": 6,
           "loves": 4,
           "favorites": 6
+        },
+        {
+          "date": "2026-08-09",
+          "views": 6,
+          "loves": 4,
+          "favorites": 6
         }
       ]
     },
@@ -1939,6 +2257,12 @@
         },
         {
           "date": "2026-08-08",
+          "views": 11,
+          "loves": 5,
+          "favorites": 5
+        },
+        {
+          "date": "2026-08-09",
           "views": 11,
           "loves": 5,
           "favorites": 5
@@ -1978,6 +2302,12 @@
           "views": 32,
           "loves": 5,
           "favorites": 5
+        },
+        {
+          "date": "2026-08-09",
+          "views": 32,
+          "loves": 5,
+          "favorites": 5
         }
       ]
     },
@@ -2011,6 +2341,12 @@
         },
         {
           "date": "2026-08-08",
+          "views": 9,
+          "loves": 5,
+          "favorites": 5
+        },
+        {
+          "date": "2026-08-09",
           "views": 9,
           "loves": 5,
           "favorites": 5
@@ -2050,6 +2386,12 @@
           "views": 67,
           "loves": 8,
           "favorites": 6
+        },
+        {
+          "date": "2026-08-09",
+          "views": 67,
+          "loves": 8,
+          "favorites": 6
         }
       ]
     },
@@ -2083,6 +2425,12 @@
         },
         {
           "date": "2026-08-08",
+          "views": 35,
+          "loves": 12,
+          "favorites": 12
+        },
+        {
+          "date": "2026-08-09",
           "views": 35,
           "loves": 12,
           "favorites": 12
@@ -2122,6 +2470,12 @@
           "views": 26,
           "loves": 6,
           "favorites": 6
+        },
+        {
+          "date": "2026-08-09",
+          "views": 26,
+          "loves": 6,
+          "favorites": 6
         }
       ]
     },
@@ -2155,6 +2509,12 @@
         },
         {
           "date": "2026-08-08",
+          "views": 50,
+          "loves": 9,
+          "favorites": 9
+        },
+        {
+          "date": "2026-08-09",
           "views": 50,
           "loves": 9,
           "favorites": 9
@@ -2194,6 +2554,12 @@
           "views": 26,
           "loves": 4,
           "favorites": 5
+        },
+        {
+          "date": "2026-08-09",
+          "views": 26,
+          "loves": 4,
+          "favorites": 5
         }
       ]
     },
@@ -2227,6 +2593,12 @@
         },
         {
           "date": "2026-08-08",
+          "views": 70,
+          "loves": 8,
+          "favorites": 8
+        },
+        {
+          "date": "2026-08-09",
           "views": 70,
           "loves": 8,
           "favorites": 8
@@ -2266,6 +2638,12 @@
           "views": 116,
           "loves": 10,
           "favorites": 9
+        },
+        {
+          "date": "2026-08-09",
+          "views": 117,
+          "loves": 10,
+          "favorites": 9
         }
       ]
     },
@@ -2299,6 +2677,12 @@
         },
         {
           "date": "2026-08-08",
+          "views": 36,
+          "loves": 6,
+          "favorites": 7
+        },
+        {
+          "date": "2026-08-09",
           "views": 36,
           "loves": 6,
           "favorites": 7
@@ -2338,6 +2722,12 @@
           "views": 26,
           "loves": 4,
           "favorites": 4
+        },
+        {
+          "date": "2026-08-09",
+          "views": 26,
+          "loves": 4,
+          "favorites": 4
         }
       ]
     },
@@ -2371,6 +2761,12 @@
         },
         {
           "date": "2026-08-08",
+          "views": 33,
+          "loves": 3,
+          "favorites": 3
+        },
+        {
+          "date": "2026-08-09",
           "views": 33,
           "loves": 3,
           "favorites": 3
@@ -2410,6 +2806,12 @@
           "views": 23,
           "loves": 2,
           "favorites": 2
+        },
+        {
+          "date": "2026-08-09",
+          "views": 23,
+          "loves": 2,
+          "favorites": 2
         }
       ]
     },
@@ -2443,6 +2845,12 @@
         },
         {
           "date": "2026-08-08",
+          "views": 32,
+          "loves": 4,
+          "favorites": 3
+        },
+        {
+          "date": "2026-08-09",
           "views": 32,
           "loves": 4,
           "favorites": 3
@@ -2482,6 +2890,12 @@
           "views": 111,
           "loves": 6,
           "favorites": 6
+        },
+        {
+          "date": "2026-08-09",
+          "views": 111,
+          "loves": 6,
+          "favorites": 6
         }
       ]
     },
@@ -2515,6 +2929,12 @@
         },
         {
           "date": "2026-08-08",
+          "views": 48,
+          "loves": 6,
+          "favorites": 6
+        },
+        {
+          "date": "2026-08-09",
           "views": 48,
           "loves": 6,
           "favorites": 6
@@ -2554,6 +2974,12 @@
           "views": 23,
           "loves": 4,
           "favorites": 5
+        },
+        {
+          "date": "2026-08-09",
+          "views": 23,
+          "loves": 4,
+          "favorites": 5
         }
       ]
     },
@@ -2587,6 +3013,12 @@
         },
         {
           "date": "2026-08-08",
+          "views": 121,
+          "loves": 14,
+          "favorites": 14
+        },
+        {
+          "date": "2026-08-09",
           "views": 121,
           "loves": 14,
           "favorites": 14
@@ -2626,6 +3058,12 @@
           "views": 79,
           "loves": 7,
           "favorites": 7
+        },
+        {
+          "date": "2026-08-09",
+          "views": 79,
+          "loves": 7,
+          "favorites": 7
         }
       ]
     },
@@ -2659,6 +3097,12 @@
         },
         {
           "date": "2026-08-08",
+          "views": 24,
+          "loves": 7,
+          "favorites": 7
+        },
+        {
+          "date": "2026-08-09",
           "views": 24,
           "loves": 7,
           "favorites": 7
@@ -2698,6 +3142,12 @@
           "views": 56,
           "loves": 7,
           "favorites": 6
+        },
+        {
+          "date": "2026-08-09",
+          "views": 56,
+          "loves": 7,
+          "favorites": 6
         }
       ]
     },
@@ -2731,6 +3181,12 @@
         },
         {
           "date": "2026-08-08",
+          "views": 49,
+          "loves": 7,
+          "favorites": 5
+        },
+        {
+          "date": "2026-08-09",
           "views": 49,
           "loves": 7,
           "favorites": 5
@@ -2770,6 +3226,12 @@
           "views": 63,
           "loves": 11,
           "favorites": 10
+        },
+        {
+          "date": "2026-08-09",
+          "views": 63,
+          "loves": 11,
+          "favorites": 10
         }
       ]
     },
@@ -2803,6 +3265,12 @@
         },
         {
           "date": "2026-08-08",
+          "views": 15,
+          "loves": 3,
+          "favorites": 2
+        },
+        {
+          "date": "2026-08-09",
           "views": 15,
           "loves": 3,
           "favorites": 2
@@ -2842,6 +3310,12 @@
           "views": 31,
           "loves": 3,
           "favorites": 3
+        },
+        {
+          "date": "2026-08-09",
+          "views": 31,
+          "loves": 3,
+          "favorites": 3
         }
       ]
     },
@@ -2875,6 +3349,12 @@
         },
         {
           "date": "2026-08-08",
+          "views": 36,
+          "loves": 5,
+          "favorites": 5
+        },
+        {
+          "date": "2026-08-09",
           "views": 36,
           "loves": 5,
           "favorites": 5
@@ -2914,6 +3394,12 @@
           "views": 32,
           "loves": 6,
           "favorites": 7
+        },
+        {
+          "date": "2026-08-09",
+          "views": 32,
+          "loves": 6,
+          "favorites": 7
         }
       ]
     },
@@ -2947,6 +3433,12 @@
         },
         {
           "date": "2026-08-08",
+          "views": 32,
+          "loves": 4,
+          "favorites": 4
+        },
+        {
+          "date": "2026-08-09",
           "views": 32,
           "loves": 4,
           "favorites": 4
@@ -2986,6 +3478,12 @@
           "views": 159,
           "loves": 9,
           "favorites": 7
+        },
+        {
+          "date": "2026-08-09",
+          "views": 159,
+          "loves": 9,
+          "favorites": 7
         }
       ]
     },
@@ -3019,6 +3517,12 @@
         },
         {
           "date": "2026-08-08",
+          "views": 22,
+          "loves": 5,
+          "favorites": 6
+        },
+        {
+          "date": "2026-08-09",
           "views": 22,
           "loves": 5,
           "favorites": 6
@@ -3058,6 +3562,12 @@
           "views": 86,
           "loves": 7,
           "favorites": 7
+        },
+        {
+          "date": "2026-08-09",
+          "views": 86,
+          "loves": 7,
+          "favorites": 7
         }
       ]
     },
@@ -3091,6 +3601,12 @@
         },
         {
           "date": "2026-08-08",
+          "views": 26,
+          "loves": 6,
+          "favorites": 6
+        },
+        {
+          "date": "2026-08-09",
           "views": 26,
           "loves": 6,
           "favorites": 6
@@ -3130,6 +3646,12 @@
           "views": 31,
           "loves": 7,
           "favorites": 7
+        },
+        {
+          "date": "2026-08-09",
+          "views": 31,
+          "loves": 7,
+          "favorites": 7
         }
       ]
     },
@@ -3166,6 +3688,24 @@
           "views": 340,
           "loves": 28,
           "favorites": 27
+        },
+        {
+          "date": "2026-08-09",
+          "views": 340,
+          "loves": 28,
+          "favorites": 27
+        }
+      ]
+    },
+    {
+      "id": 1367404147,
+      "name": "サイン",
+      "data": [
+        {
+          "date": "2026-08-09",
+          "views": 2,
+          "loves": 1,
+          "favorites": 1
         }
       ]
     }
