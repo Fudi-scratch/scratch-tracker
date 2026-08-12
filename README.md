@@ -1,23 +1,23 @@
 # Scratch Tracker
 
-A comprehensive tracking solution for managing and monitoring Scratch projects, progress, and activities.
+Scratchプロジェクトの進捗状況、および活動を管理するための包括的な分析ソリューション。
 
-## Features
+## 特徴
 
-- 📊 Project tracking and management
-- 📈 Progress monitoring
-- 🔍 Activity logging
-- 📋 Task organization
-- 📱 Easy-to-use interface
+- 📊 プロジェクトの分析と管理
+- 📈 進捗状況のモニタリング
+- 🔍 進捗状況、活動の記録
+- 📋 タスクの整理
+- 📱 使いやすいインターフェース
 
-## Getting Started
+## はじめに
 
-### Prerequisites
+### 必須要件
 
-- Node.js (v14.0.0 or higher)
-- npm or yarn
+- Node.js (ver.14.0.0以降)
+- npm または yarn
 
-### Installation
+### インストール
 
 ```bash
 # Clone the repository
@@ -30,7 +30,7 @@ cd scratch-tracker
 npm install
 ```
 
-### Usage
+### 使用方法
 
 ```bash
 # Start the application
@@ -43,7 +43,7 @@ npm test
 npm run build
 ```
 
-## Project Structure
+## プロジェクト構成
 
 ```
 scratch-tracker/
@@ -53,28 +53,14 @@ scratch-tracker/
 └── package.json   # Project metadata
 ```
 
-## Contributing
+## ライセンス
 
-Contributions are welcome! Please follow these steps:
+このプロジェクトはMITライセンスに基づいてライセンスされています。詳細はLICENSEファイルをご覧ください。
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+## 更新記録
 
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Support
-
-If you encounter any issues or have questions, please open an issue on the [GitHub Issues](https://github.com/Fudi-scratch/scratch-tracker/issues) page.
-
-## Changelog
-
-See [CHANGELOG.md](./CHANGELOG.md) for version history and updates.
+バージョン履歴と更新情報については、[CHANGELOG.md](./CHANGELOG.md) を参照してください。
 
 ---
 
-**Happy Tracking!** 🚀
+**順調で楽しいトラッキングを!** 🚀
