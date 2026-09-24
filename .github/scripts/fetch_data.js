@@ -47,7 +47,7 @@ async function fetchWithRetry(url, retries = 3, timeout = 10000) {
           status.projects = existing.projects || [];
         } catch(e) { /* ignore */ }
       }
-      fs.writeFileSync('status.json', JSON.stringify(status, null, 2));
+      fs.writeFileSync('status.json', JSON.stringify(status));
       console.log('status.json saved (no projects).');
       return;
     }
@@ -99,7 +99,7 @@ async function fetchWithRetry(url, retries = 3, timeout = 10000) {
     }
 
     status.update = new Date().toISOString();
-    fs.writeFileSync('status.json', JSON.stringify(status, null, 2));
+    fs.writeFileSync('status.json', JSON.stringify(status));
     console.log('status.json saved!');
 
   } catch (e) {
