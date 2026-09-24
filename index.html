@@ -177,8 +177,29 @@
     background-position:-1px -1px;
   }
   .graph-container{position:relative;width:100%;height:230px;}
-  svg{width:100%;height:100%;overflow:visible;}
-  .tooltip{font-size:10px;fill:var(--ink-soft);text-anchor:middle;font-family:var(--mono);}
+  svg{width:100%;height:100%;overflow:visible;touch-action:pan-y;}
+  .chart-hover-tip{
+    position:absolute;
+    pointer-events:none;
+    top:0;
+    left:0;
+    transform:translate(-50%,-100%);
+    background:var(--ink);
+    color:#F5F7F9;
+    font-family:var(--mono);
+    font-size:11px;
+    line-height:1.5;
+    padding:8px 10px;
+    border-radius:3px;
+    white-space:nowrap;
+    opacity:0;
+    transition:opacity 100ms ease;
+    z-index:4;
+  }
+  .chart-hover-tip.visible{opacity:1;}
+  .chart-hover-tip .tip-date{color:#C7D0D8;margin-bottom:3px;}
+  .chart-hover-tip .tip-row{display:flex;align-items:center;gap:6px;}
+  .chart-hover-tip .tip-dot{width:7px;height:7px;border-radius:50%;display:inline-block;}
   .empty-chart{
     font-size:12px;
     color:var(--ink-faint);
@@ -275,8 +296,9 @@
     </div>
 
     <div class="chart-panel">
-      <div class="graph-container">
-        <svg id="lineChart" role="img" aria-label="閲覧数・ハート・星の推移グラフ"></svg>
+      <div class="graph-container" id="graphContainer">
+        <svg id="lineChart" role="img" aria-label="閲覧数・ハート・星の推移グラフ。ポイントにカーソルを合わせると日付ごとの数値が表示されます"></svg>
+        <div class="chart-hover-tip" id="chartTip"></div>
       </div>
     </div>
     <div class="legend">
@@ -459,6 +481,7 @@
     const xStep = totalPoints > 1 ? (width - padding * 2) / (totalPoints - 1) : (width - padding * 2);
 
     let viewPoints = [], lovePoints = [], favPoints = [];
+    const pointsData = [];
     savedData.forEach((item, index) => {
       const x = totalPoints > 1 ? padding + index * xStep : width / 2;
       const yView = height - padding - ((item.views - minViews) / viewRange) * (height - padding * 2);
@@ -467,19 +490,80 @@
       viewPoints.push(`${x},${yView}`);
       lovePoints.push(`${x},${yLove}`);
       favPoints.push(`${x},${yFav}`);
-      if (totalPoints <= 7 || index === 0 || index === totalPoints - 1) {
-        createSvgText(svg, x, height + 15, (item.date || '').slice(5), '#5B6672');
-        createSvgText(svg, x, yView - 8, item.views, '#2F6FA8');
-      }
-      createSvgCircle(svg, x, yView, '#2F6FA8');
-      createSvgCircle(svg, x, yLove, '#C25B4A');
-      createSvgCircle(svg, x, yFav, '#B4881F');
+      pointsData.push({ x, yView, yLove, yFav, item });
+      createSvgCircle(svg, x, yView, '#2F6FA8', 4, 'pt-view');
+      createSvgCircle(svg, x, yLove, '#C25B4A', 4, 'pt-love');
+      createSvgCircle(svg, x, yFav, '#B4881F', 4, 'pt-fav');
     });
     if (totalPoints > 1) {
       createSvgLine(svg, viewPoints.join(' '), '#2F6FA8', 3);
       createSvgLine(svg, lovePoints.join(' '), '#C25B4A', 2);
       createSvgLine(svg, favPoints.join(' '), '#B4881F', 2);
+      createSvgText(svg, pointsData[0].x, height + 15, savedData[0].date || '', '#93A0AC');
+      createSvgText(svg, pointsData[totalPoints - 1].x, height + 15, savedData[totalPoints - 1].date || '', '#93A0AC');
     }
+
+    const guideLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    guideLine.setAttribute('y1', padding - 4);
+    guideLine.setAttribute('y2', height - padding + 4);
+    guideLine.setAttribute('stroke', '#93A0AC');
+    guideLine.setAttribute('stroke-width', '1');
+    guideLine.setAttribute('stroke-dasharray', '3,3');
+    guideLine.setAttribute('opacity', '0');
+    svg.appendChild(guideLine);
+
+    const hitArea = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    hitArea.setAttribute('x', '0');
+    hitArea.setAttribute('y', '0');
+    hitArea.setAttribute('width', width);
+    hitArea.setAttribute('height', height);
+    hitArea.setAttribute('fill', 'transparent');
+    svg.appendChild(hitArea);
+
+    const tip = document.getElementById('chartTip');
+    const container = document.getElementById('graphContainer');
+    const dotColors = { views: '#2F6FA8', loves: '#C25B4A', favorites: '#B4881F' };
+    const dotLabels = { views: '閲覧数', loves: 'ハート', favorites: '星の数' };
+
+    function showTipAt(index) {
+      const p = pointsData[index];
+      if (!p) return;
+      guideLine.setAttribute('x1', p.x);
+      guideLine.setAttribute('x2', p.x);
+      guideLine.setAttribute('opacity', '1');
+      ['pt-view', 'pt-love', 'pt-fav'].forEach((cls, i) => {
+        svg.querySelectorAll('.' + cls).forEach((c, ci) => {
+          c.setAttribute('r', ci === index ? '6' : '4');
+        });
+      });
+      tip.innerHTML =
+        `<div class="tip-date">${p.item.date || ''}</div>` +
+        ['views', 'loves', 'favorites'].map(key =>
+          `<div class="tip-row"><i class="tip-dot" style="background:${dotColors[key]}"></i>${dotLabels[key]}: ${p.item[key]}</div>`
+        ).join('');
+      const left = (p.x / width) * container.clientWidth;
+      const top = Math.min(p.yView, p.yLove, p.yFav);
+      tip.style.left = left + 'px';
+      tip.style.top = Math.max(top - 10, 0) + 'px';
+      tip.classList.add('visible');
+    }
+
+    function hideTip() {
+      guideLine.setAttribute('opacity', '0');
+      ['pt-view', 'pt-love', 'pt-fav'].forEach(cls => {
+        svg.querySelectorAll('.' + cls).forEach(c => c.setAttribute('r', '4'));
+      });
+      tip.classList.remove('visible');
+    }
+
+    hitArea.addEventListener('pointermove', (e) => {
+      const rect = svg.getBoundingClientRect();
+      const mouseX = ((e.clientX - rect.left) / rect.width) * width;
+      let index = totalPoints > 1 ? Math.round((mouseX - padding) / xStep) : 0;
+      index = Math.max(0, Math.min(totalPoints - 1, index));
+      showTipAt(index);
+    });
+    hitArea.addEventListener('pointerleave', hideTip);
   }
 
   function createSvgLine(svg, points, color, width) {
@@ -490,16 +574,19 @@
     svg.appendChild(line);
   }
 
-  function createSvgCircle(svg, cx, cy, color) {
+  function createSvgCircle(svg, cx, cy, color, r, className) {
     const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    circle.setAttribute('cx', cx); circle.setAttribute('cy', cy); circle.setAttribute('r', '4');
-    circle.setAttribute('fill', color); svg.appendChild(circle);
+    circle.setAttribute('cx', cx); circle.setAttribute('cy', cy); circle.setAttribute('r', r || '4');
+    circle.setAttribute('fill', color);
+    if (className) circle.setAttribute('class', className);
+    svg.appendChild(circle);
   }
 
   function createSvgText(svg, x, y, textContent, color) {
     const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
     text.setAttribute('x', x); text.setAttribute('y', y);
-    text.setAttribute('class', 'tooltip'); text.setAttribute('fill', color);
+    text.setAttribute('font-size', '10'); text.setAttribute('font-family', 'IBM Plex Mono, monospace');
+    text.setAttribute('text-anchor', 'middle'); text.setAttribute('fill', color);
     text.textContent = textContent; svg.appendChild(text);
   }
 
