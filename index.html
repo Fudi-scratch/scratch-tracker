@@ -1,585 +1,549 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <link rel="icon" href="ICON.png">
-    <title>Scratch Tracker</title>
-    <style>
-        body { font-family: sans-serif; padding: 15px; background: #f5f6fa; margin: 0; }
-        .container { max-width: 650px; margin: 10px auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .selector-section { background: #f1f2f6; padding: 12px; border-radius: 6px; margin-bottom: 15px; }
-        .flex-box { display: flex; gap: 8px; margin-bottom: 8px; }
-        select, input { padding: 8px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        select { flex: 1; }
-        input[type="text"] { flex: 1; }
-        .add-btn { background: #2ecc71; color: white; border: none; font-weight: bold; cursor: pointer; padding: 8px 15px; border-radius: 4px; white-space: nowrap; }
-        .add-btn:hover { background: #27ae60; }
-        .del-btn { background: #e74c3c; color: white; border: none; font-weight: bold; cursor: pointer; padding: 6px 12px; border-radius: 4px; font-size: 12px; }
-        .del-btn:hover { background: #c0392b; }
-        .btn { background: #3498db; color: white; border: none; padding: 12px; font-size: 16px; border-radius: 6px; cursor: pointer; width: 100%; font-weight: bold; margin-bottom: 10px; }
-        .btn:hover { background: #2980b9; }
-        .info { color: #666; font-size: 13px; text-align: center; margin-bottom: 5px; font-weight: bold; }
-        .info-box { background: #f1f2f6; border-radius: 6px; padding: 8px 12px; margin-bottom: 15px; font-size: 12px; color: #555; cursor: pointer; user-select: none; }
-        .info-content { margin-top: 6px; font-size: 12px; color: #333; word-break: break-all; display: none; }
-        .graph-container { position: relative; width: 100%; height: 260px; border-left: 2px solid #ccc; border-bottom: 2px solid #ccc; box-sizing: border-box; margin-top: 10px; }
-        svg { width: 100%; height: 100%; overflow: visible; }
-        .tooltip { font-size: 10px; fill: #555; text-anchor: middle; }
-        #debugLog { background: #1a1a2e; color: #00ff88; font-family: monospace; font-size: 12px; padding: 10px; border-radius: 6px; margin-top: 6px; min-height: 60px; white-space: pre-wrap; word-break: break-all; max-height: 150px; overflow-y: auto; }
-        #searchInput { width: 100%; box-sizing: border-box; margin-bottom: 6px; }
-        .search-result { padding: 6px 10px; cursor: pointer; border-radius: 4px; font-size: 13px; }
-        .search-result:hover { background: #e8f4fd; }
-        #searchResults { max-height: 180px; overflow-y: auto; border: 1px solid #ddd; border-radius: 4px; display: none; }
-        .token-section { background: #fff3cd; padding: 12px; border-radius: 6px; margin-bottom: 15px; border-left: 4px solid #ffc107; }
-        .token-section label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 5px; }
-        .token-section input { width: 100%; box-sizing: border-box; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="ICON.png">
+<title>Scratch Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EEF1F5;
+    --panel:#FFFFFF;
+    --ink:#1C2B3A;
+    --ink-soft:#5B6672;
+    --ink-faint:#93A0AC;
+    --border:#D7DDE3;
+    --accent:#2F8F6E;
+    --accent-dark:#22694F;
+    --line-views:#2F6FA8;
+    --line-loves:#C25B4A;
+    --line-favs:#B4881F;
+    --serif:'Source Serif 4', Georgia, serif;
+    --mono:'IBM Plex Mono', 'SF Mono', Consolas, monospace;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:var(--mono);
+    color:var(--ink);
+    background:
+      linear-gradient(var(--paper) 1px, transparent 1px),
+      linear-gradient(90deg, var(--paper) 1px, transparent 1px),
+      #E4E9EE;
+    background-size:100% 100%, 100% 100%;
+    background-color:var(--paper);
+    padding:28px 16px 60px;
+  }
+  .page{
+    max-width:620px;
+    margin:0 auto;
+  }
+  header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    gap:12px;
+    flex-wrap:wrap;
+    padding-bottom:14px;
+    border-bottom:2px solid var(--ink);
+  }
+  header::after{content:none;}
+  .wordmark{
+    font-family:var(--serif);
+    font-weight:600;
+    font-size:28px;
+    letter-spacing:0.2px;
+    margin:0;
+  }
+  .tagline{
+    font-size:12px;
+    color:var(--ink-soft);
+    margin-top:4px;
+  }
+  .updated{
+    font-size:12px;
+    color:var(--ink-soft);
+    text-align:right;
+    white-space:nowrap;
+  }
+  .updated strong{color:var(--ink);font-weight:500;}
+  .rule-thin{border:none;border-top:1px solid var(--border);margin:0 0 22px;}
+
+  .field{margin-bottom:14px;}
+  .field label{
+    display:block;
+    font-size:11px;
+    color:var(--ink-soft);
+    margin-bottom:6px;
+  }
+  input, select{
+    width:100%;
+    font-family:var(--mono);
+    font-size:14px;
+    color:var(--ink);
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:3px;
+    padding:9px 10px;
+  }
+  input:focus, select:focus, button:focus-visible{
+    outline:2px solid var(--accent);
+    outline-offset:1px;
+    border-color:var(--accent);
+  }
+  #searchResults{
+    margin-top:6px;
+    border:1px solid var(--border);
+    border-radius:3px;
+    background:var(--panel);
+    max-height:190px;
+    overflow-y:auto;
+    display:none;
+  }
+  .search-result{
+    padding:8px 10px;
+    font-size:13px;
+    cursor:pointer;
+    border-bottom:1px solid var(--border);
+  }
+  .search-result:last-child{border-bottom:none;}
+  .search-result:hover{background:#EAF3EF;}
+
+  .error-banner{
+    display:none;
+    font-size:12px;
+    color:var(--line-loves);
+    border:1px solid var(--line-loves);
+    background:#FBEEEC;
+    border-radius:3px;
+    padding:8px 10px;
+    margin-bottom:14px;
+  }
+
+  .project-heading{margin:28px 0 4px;}
+  .project-name{
+    font-family:var(--serif);
+    font-weight:600;
+    font-size:22px;
+    margin:0;
+  }
+  .project-id{
+    font-size:12px;
+    color:var(--ink-faint);
+    margin-top:3px;
+  }
+
+  .stats-row{
+    display:flex;
+    gap:1px;
+    background:var(--border);
+    border:1px solid var(--border);
+    border-radius:3px;
+    overflow:hidden;
+    margin:16px 0 18px;
+  }
+  .stat-cell{
+    flex:1;
+    background:var(--panel);
+    padding:12px 10px;
+    text-align:left;
+  }
+  .stat-value{
+    font-size:22px;
+    font-weight:600;
+    font-variant-numeric:tabular-nums;
+  }
+  .stat-label{
+    font-size:11px;
+    color:var(--ink-soft);
+    margin-top:3px;
+  }
+  .stat-views .stat-value{color:var(--line-views);}
+  .stat-loves .stat-value{color:var(--line-loves);}
+  .stat-favs .stat-value{color:var(--line-favs);}
+
+  .chart-panel{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:3px;
+    padding:14px 14px 6px;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size:32px 32px;
+    background-position:-1px -1px;
+  }
+  .graph-container{position:relative;width:100%;height:230px;}
+  svg{width:100%;height:100%;overflow:visible;}
+  .tooltip{font-size:10px;fill:var(--ink-soft);text-anchor:middle;font-family:var(--mono);}
+  .empty-chart{
+    font-size:12px;
+    color:var(--ink-faint);
+    padding:40px 0;
+    text-align:center;
+  }
+
+  .legend{
+    display:flex;
+    gap:18px;
+    justify-content:flex-start;
+    margin:12px 2px 0;
+    font-size:11px;
+    color:var(--ink-soft);
+  }
+  .legend span{display:inline-flex;align-items:center;gap:6px;}
+  .dot{width:8px;height:8px;border-radius:50%;display:inline-block;}
+  .dot-views{background:var(--line-views);}
+  .dot-loves{background:var(--line-loves);}
+  .dot-favs{background:var(--line-favs);}
+
+  .actions{margin-top:26px;display:flex;justify-content:flex-end;}
+  .btn-outline{
+    font-family:var(--mono);
+    font-size:13px;
+    color:var(--ink);
+    background:transparent;
+    border:1px solid var(--ink);
+    border-radius:3px;
+    padding:9px 16px;
+    cursor:pointer;
+  }
+  .btn-outline:hover{background:var(--ink);color:var(--panel);}
+
+  footer{
+    margin-top:34px;
+    font-size:11px;
+    color:var(--ink-faint);
+    border-top:1px solid var(--border);
+    padding-top:12px;
+  }
+
+  @media (max-width:420px){
+    .wordmark{font-size:24px;}
+    .stats-row{flex-direction:column;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important;}
+  }
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="selector-section">
-            <label style="font-size:12px; font-weight:bold; color:#555; display:block; margin-bottom:5px;">作品を検索：</label>
-            <input type="text" id="searchInput" placeholder="作品名で検索..." oninput="searchProjects()">
-            <div id="searchResults"></div>
+  <div class="page">
+    <header>
+      <div>
+        <p class="wordmark">Scratch Tracker</p>
+        <p class="tagline">作品の閲覧数・ハート・星の推移を記録</p>
+      </div>
+      <div class="updated" id="updatedLabel">最終更新: —</div>
+    </header>
+    <hr class="rule-thin">
 
-            <label style="font-size:12px; font-weight:bold; color:#555; display:block; margin-bottom:5px; margin-top:8px;">または一覧から切り替え：</label>
-            <div class="flex-box" style="align-items:center;">
-                <select id="projectSelect" onchange="changeProject()" style="min-width:0; flex:1;"></select>
-                <button class="del-btn" onclick="deleteCurrentProject()" style="flex-shrink:0;">🗑️ 削除</button>
-            </div>
+    <div class="error-banner" id="errorBanner">status.json の読み込みに失敗しました。時間を置いて再度お試しください。</div>
 
-            <label style="font-size:12px; font-weight:bold; color:#555; display:block; margin-bottom:5px; margin-top:8px;">作品のURLを入力して登録：</label>
-            <div class="flex-box">
-                <input type="text" id="urlInput" placeholder="作品のURL（またはID数字）" oninput="autoFetchName()">
-                <input type="text" id="nameInput" placeholder="名前を自動取得...">
-                <button class="add-btn" onclick="addNewProjectManual()">追加</button>
-            </div>
-        </div>
-
-        <div class="token-section">
-            <label>🔑 GitHub Personal Access Token （Secret自動更新用）:</label>
-            <input type="password" id="patToken" placeholder="ghp_xxxx... から始まるトークンを入力">
-            <small style="color:#666; display:block; margin-top:5px;">※ブラウザに保存されます（ローカルストレージ）</small>
-        </div>
-
-        <h3 id="currentTitle" style="margin-top:0; color:#2c3e50;">作品統計グラフ</h3>
-        
-        <button class="btn" onclick="fetchAllProjectsData()">🔄 登録されている全作品のデータを一括計測！</button>
-        <button class="btn" style="background:#8e44ad;" onclick="exportTxt()">📄 データをtxtに出力</button>
-
-        <div class="info-box" onclick="toggleStatus()">
-            <span id="statusLabel">📊 計測結果 ▶ 開く</span>
-            <div id="statusContent" class="info-content"></div>
-        </div>
-        
-        <div class="graph-container">
-            <svg id="lineChart"></svg>
-        </div>
-        <div style="display:flex; justify-content: space-around; margin-top:15px; font-size:12px; font-weight:bold;">
-            <span style="color:#3498db;">● 閲覧数 (青)</span>
-            <span style="color:#2ecc71;">● ハート (緑)</span>
-            <span style="color:#f1c40f;">● 星の数 (黄)</span>
-        </div>
-
-        <div style="margin-top:15px;">
-            <div onclick="toggleDebug()" style="font-size:12px; font-weight:bold; color:#555; cursor:pointer; user-select:none;">🔍 デバッグログ <span id="debugArrow">▶ 開く</span></div>
-            <div id="debugLog" style="display:none;">ここにログが表示されます...</div>
-        </div>
+    <div class="field">
+      <label for="searchInput">作品を検索</label>
+      <input type="text" id="searchInput" placeholder="作品名またはIDで検索" oninput="searchProjects()">
+      <div id="searchResults"></div>
     </div>
+
+    <div class="field">
+      <label for="projectSelect">登録されている作品から選ぶ</label>
+      <select id="projectSelect" onchange="changeProject()"></select>
+    </div>
+
+    <div class="project-heading">
+      <h2 class="project-name" id="currentTitle">読み込み中…</h2>
+      <div class="project-id" id="currentId"></div>
+    </div>
+
+    <div class="stats-row" id="statsRow">
+      <div class="stat-cell stat-views">
+        <div class="stat-value" id="statViews">—</div>
+        <div class="stat-label">閲覧数</div>
+      </div>
+      <div class="stat-cell stat-loves">
+        <div class="stat-value" id="statLoves">—</div>
+        <div class="stat-label">ハート</div>
+      </div>
+      <div class="stat-cell stat-favs">
+        <div class="stat-value" id="statFavs">—</div>
+        <div class="stat-label">星の数</div>
+      </div>
+    </div>
+
+    <div class="chart-panel">
+      <div class="graph-container">
+        <svg id="lineChart" role="img" aria-label="閲覧数・ハート・星の推移グラフ"></svg>
+      </div>
+    </div>
+    <div class="legend">
+      <span><i class="dot dot-views"></i>閲覧数</span>
+      <span><i class="dot dot-loves"></i>ハート</span>
+      <span><i class="dot dot-favs"></i>星の数</span>
+    </div>
+
+    <div class="actions">
+      <button class="btn-outline" onclick="exportTxt()">txt に書き出す</button>
+    </div>
+
+    <footer>
+      データは毎日自動更新されます（GitHub Actions / status.json）。
+    </footer>
+  </div>
+
 <script>
-    const DEFAULT_PROJECTS = [{ id: "1207770778", name: "3Dっぽいプラットフォーマー" }];
-    let currentProjectId = "1207770778";
-    let autoFetchTimer = null;
+  const DEFAULT_PROJECTS = [{ id: "1207770778", name: "3Dっぽいプラットフォーマー" }];
+  let currentProjectId = "1207770778";
+  let STATUS_DATA = { update: null, projects: [] };
 
-    function dlog(msg) {
-        const el = document.getElementById("debugLog");
-        if (el) el.textContent += "\n" + msg;
+  async function loadStatusJson() {
+    try {
+      const res = await fetch('./status.json', { cache: 'no-cache' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      STATUS_DATA = {
+        update: data.update || null,
+        projects: Array.isArray(data.projects) ? data.projects : []
+      };
+      document.getElementById('errorBanner').style.display = 'none';
+    } catch (e) {
+      console.error('status.json load error:', e);
+      STATUS_DATA = { update: null, projects: [] };
+      document.getElementById('errorBanner').style.display = 'block';
+    }
+  }
+
+  function formatUpdated(iso) {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return '—';
+    return d.toLocaleString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+  }
+
+  window.onload = async function () {
+    await loadStatusJson();
+    document.getElementById('updatedLabel').innerHTML = `最終更新: <strong>${formatUpdated(STATUS_DATA.update)}</strong>`;
+
+    initProjectList();
+
+    const select = document.getElementById('projectSelect');
+    const savedLastId = localStorage.getItem('scratch_last_selected_id');
+    if (savedLastId && Array.from(select.options).some(opt => opt.value === String(savedLastId))) {
+      currentProjectId = String(savedLastId);
+      select.value = currentProjectId;
+    } else if (select.options.length > 0) {
+      currentProjectId = select.options[0].value;
     }
 
-    function toggleDebug() {
-        const log = document.getElementById("debugLog");
-        const arrow = document.getElementById("debugArrow");
-        if (!log) return;
-        if (log.style.display === "none") { log.style.display = "block"; if (arrow) arrow.textContent = "▼ 閉じる"; }
-        else { log.style.display = "none"; if (arrow) arrow.textContent = "▶ 開く"; }
-    }
+    changeProject();
+  };
 
-    function toggleStatus() {
-        const content = document.getElementById("statusContent");
-        const label = document.getElementById("statusLabel");
-        if (!content || !label) return;
-        const current = content.style.display;
-        if (current === "none" || current === "") {
-            content.style.display = "block";
-            label.textContent = label.textContent.replace("▶ 開く", "▼ 閉じる");
-        } else {
-            content.style.display = "none";
-            label.textContent = label.textContent.replace("▼ 閉じる", "▶ 開く");
-        }
-    }
+  function initProjectList() {
+    let plist = Array.isArray(STATUS_DATA.projects) ? STATUS_DATA.projects.slice() : [];
+    if (!plist || plist.length === 0) plist = DEFAULT_PROJECTS.slice();
 
-    function setStatus(msg) {
-        const label = document.getElementById("statusLabel");
-        const content = document.getElementById("statusContent");
-        if (!label || !content) return;
-        const firstLine = msg.split('：[')[0];
-        const namesPart = msg.includes('：[') ? '：[ ' + msg.split('：[')[1] : '';
-        label.textContent = firstLine + (namesPart ? ' ▶ 開く' : '');
-        content.textContent = namesPart.replace('[ ', '').replace(']', '').split(', ').join('\n');
-        content.style.display = "none";
-        if (namesPart) label.textContent = firstLine + ' ▶ 開く';
-        else label.textContent = firstLine;
-    }
-
-    function proxyUrl(apiUrl) {
-        return `https://corsproxy.io/?${encodeURIComponent(apiUrl)}`;
-    }
-
-    // === status.json を扱うグローバル ===
-    let STATUS_DATA = { update: null, projects: [] };
-
-    async function loadStatusJson() {
-      try {
-        const res = await fetch('/status.json', { cache: 'no-cache' });
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        const data = await res.json();
-        STATUS_DATA = {
-          update: data.update || null,
-          projects: Array.isArray(data.projects) ? data.projects : []
-        };
-      } catch (e) {
-        console.error('status.json load error:', e);
-        STATUS_DATA = { update: null, projects: [] };
+    const select = document.getElementById('projectSelect');
+    select.innerHTML = '';
+    plist.forEach(p => {
+      if (p && p.id) {
+        const opt = document.createElement('option');
+        opt.value = String(p.id).trim();
+        opt.innerText = `${p.name || ''} (${p.id})`;
+        select.appendChild(opt);
       }
-    }
+    });
+  }
 
-    window.onload = async function() {
-        // PAT の復元（残す場合）
-        const savedPat = localStorage.getItem('scratch_github_pat');
-        if (savedPat && document.getElementById('patToken')) {
-            document.getElementById('patToken').value = savedPat;
-        }
-        if (document.getElementById('patToken')) {
-            document.getElementById('patToken').addEventListener('change', function() {
-                localStorage.setItem('scratch_github_pat', this.value);
-            });
-        }
+  function searchProjects() {
+    const query = (document.getElementById('searchInput')?.value || '').trim().toLowerCase();
+    const resultsDiv = document.getElementById('searchResults');
+    if (!query) { resultsDiv.style.display = 'none'; return; }
 
-        // 初期化: status.json からプロジェクト一覧を作る
-        await initProjectList();
+    const plist = Array.isArray(STATUS_DATA.projects) ? STATUS_DATA.projects : [];
+    const matched = plist.filter(p => (p.name || '').toLowerCase().includes(query) || String(p.id).includes(query));
 
-        // currentTitle 更新
+    if (matched.length === 0) { resultsDiv.style.display = 'none'; return; }
+
+    resultsDiv.innerHTML = '';
+    matched.forEach(p => {
+      const div = document.createElement('div');
+      div.className = 'search-result';
+      div.textContent = `${p.name || ''} (${p.id})`;
+      div.onclick = () => {
+        currentProjectId = String(p.id);
+        localStorage.setItem('scratch_last_selected_id', currentProjectId);
         const select = document.getElementById('projectSelect');
-        if (select && select.options.length > 0) {
-            const opt = Array.from(select.options).find(o => o.value === String(currentProjectId));
-            if (opt) document.getElementById('currentTitle').innerText = opt.text;
-            else document.getElementById('currentTitle').innerText = select.options[0].text;
-        }
-
-        changeProject();
-    };
-
-    async function initProjectList() {
-      await loadStatusJson();
-
-      let plist = Array.isArray(STATUS_DATA.projects) ? STATUS_DATA.projects.slice() : [];
-      if (!plist || plist.length === 0) plist = DEFAULT_PROJECTS.slice();
-
-      const select = document.getElementById('projectSelect');
-      if (!select) return;
-      select.innerHTML = '';
-      plist.forEach(p => {
-        if (p && p.id) {
-          const opt = document.createElement('option');
-          opt.value = String(p.id).trim();
-          opt.innerText = `${p.name || ''} (${p.id})`;
-          select.appendChild(opt);
-        }
-      });
-
-      if ((!currentProjectId || currentProjectId === '') && select.options.length > 0) {
-        currentProjectId = select.options[0].value;
-      }
-
-      const savedLastId = localStorage.getItem('scratch_last_selected_id');
-      if (savedLastId && Array.from(select.options).some(opt => opt.value === String(savedLastId))) {
-        currentProjectId = String(savedLastId);
         select.value = currentProjectId;
+        document.getElementById('searchInput').value = '';
+        resultsDiv.style.display = 'none';
+        changeProject();
+      };
+      resultsDiv.appendChild(div);
+    });
+    resultsDiv.style.display = 'block';
+  }
+
+  function changeProject() {
+    const select = document.getElementById('projectSelect');
+    if (select && select.options.length > 0) {
+      currentProjectId = select.value;
+      localStorage.setItem('scratch_last_selected_id', currentProjectId);
+      const opt = select.options[select.selectedIndex];
+      const rawText = opt.text;
+      const lastIdx = rawText.lastIndexOf(' (');
+      document.getElementById('currentTitle').innerText = lastIdx !== -1 ? rawText.substring(0, lastIdx) : rawText;
+      document.getElementById('currentId').innerText = `ID: ${currentProjectId}`;
+    } else {
+      document.getElementById('currentTitle').innerText = '登録されている作品がありません';
+      document.getElementById('currentId').innerText = '';
+    }
+    updateStats();
+    drawChart();
+  }
+
+  function currentProjectData() {
+    const project = STATUS_DATA.projects.find(p => String(p.id) === String(currentProjectId));
+    return (project && Array.isArray(project.data)) ? project.data : [];
+  }
+
+  function updateStats() {
+    const data = currentProjectData();
+    const last = data[data.length - 1];
+    document.getElementById('statViews').textContent = last ? last.views : '—';
+    document.getElementById('statLoves').textContent = last ? last.loves : '—';
+    document.getElementById('statFavs').textContent = last ? last.favorites : '—';
+  }
+
+  function drawChart() {
+    const savedData = currentProjectData();
+    const svg = document.getElementById('lineChart');
+    if (!svg) return;
+    svg.innerHTML = '';
+
+    if (savedData.length < 1) {
+      const container = svg.parentElement;
+      if (!container.querySelector('.empty-chart')) {
+        const msg = document.createElement('div');
+        msg.className = 'empty-chart';
+        msg.textContent = '記録がまだありません';
+        container.appendChild(msg);
       }
+      return;
     }
+    const existingMsg = svg.parentElement.querySelector('.empty-chart');
+    if (existingMsg) existingMsg.remove();
 
-    function searchProjects() {
-        const query = (document.getElementById('searchInput')?.value || '').trim().toLowerCase();
-        const resultsDiv = document.getElementById('searchResults');
-        if (!resultsDiv) return;
-        if (!query) { resultsDiv.style.display = 'none'; return; }
+    const width = svg.clientWidth || 600;
+    const height = svg.clientHeight || 230;
+    const padding = 20;
 
-        const plist = Array.isArray(STATUS_DATA.projects) ? STATUS_DATA.projects : [];
-        const matched = plist.filter(p => (p.name || '').toLowerCase().includes(query) || String(p.id).includes(query));
+    const allViews = savedData.map(d => d.views);
+    const maxViews = Math.max(...allViews) || 10;
+    const minViews = Math.min(...allViews) || 0;
+    const viewRange = (maxViews - minViews) === 0 ? 10 : (maxViews - minViews);
 
-        if (matched.length === 0) { resultsDiv.style.display = 'none'; return; }
+    const allLoves = savedData.map(d => d.loves);
+    const maxLoves = Math.max(...allLoves) || 10;
+    const minLoves = Math.min(...allLoves) || 0;
+    const loveRange = (maxLoves - minLoves) === 0 ? 10 : (maxLoves - minLoves);
 
-        resultsDiv.innerHTML = '';
-        matched.forEach(p => {
-            const div = document.createElement('div');
-            div.className = 'search-result';
-            div.textContent = `${p.name || ''} (${p.id})`;
-            div.onclick = () => {
-                currentProjectId = String(p.id);
-                localStorage.setItem('scratch_last_selected_id', currentProjectId);
-                const select = document.getElementById('projectSelect');
-                if (select) select.value = currentProjectId;
-                if (document.getElementById('currentTitle')) document.getElementById('currentTitle').innerText = `${p.name || ''} (${p.id})`;
-                document.getElementById('searchInput').value = '';
-                resultsDiv.style.display = 'none';
-                drawChart();
-            };
-            resultsDiv.appendChild(div);
-        });
-        resultsDiv.style.display = 'block';
-    }
+    const allFavs = savedData.map(d => d.favorites);
+    const maxFavs = Math.max(...allFavs) || 10;
+    const minFavs = Math.min(...allFavs) || 0;
+    const favRange = (maxFavs - minFavs) === 0 ? 10 : (maxFavs - minFavs);
 
-    function autoFetchName() {
-        clearTimeout(autoFetchTimer);
-        const urlText = document.getElementById('urlInput')?.value.trim() || '';
-        const nameInput = document.getElementById('nameInput');
-        const numberMatch = urlText.match(/[0-9]+/);
-        if (!numberMatch) { if (nameInput) { nameInput.placeholder = '名前を自動取得...'; nameInput.value = ''; } return; }
-        const id = numberMatch[0];
-        if (!nameInput) return;
-        nameInput.value = '';
-        nameInput.placeholder = '取得中...';
-        autoFetchTimer = setTimeout(async () => {
-            try {
-                const res = await fetch(proxyUrl(`https://api.scratch.mit.edu/projects/${id}`));
-                if (!res.ok) throw new Error();
-                const data = await res.json();
-                if (data && data.title) { nameInput.value = data.title; nameInput.placeholder = '作品名（変更可）'; }
-                else { nameInput.placeholder = '取得失敗（手動入力）'; }
-            } catch(e) { nameInput.placeholder = '取得失敗（手動入力）'; }
-        }, 600);
-    }
+    const totalPoints = savedData.length;
+    const xStep = totalPoints > 1 ? (width - padding * 2) / (totalPoints - 1) : (width - padding * 2);
 
-    async function updateGitHubSecret(projectList) {
-        const patEl = document.getElementById('patToken');
-        const pat = patEl ? patEl.value.trim() : '';
-        if (!pat) {
-            dlog('⚠️ PAT トークンが入力されていません。Secretは更新されませんでした。');
-            return;
-        }
-
-        try {
-            dlog('🔐 GitHub Secret を更新中...');
-
-            const secretName = 'SCRATCH_PROJECT_LIST';
-            const secretValue = JSON.stringify(projectList);
-
-            const keysResponse = await fetch(
-                'https://api.github.com/repos/Fudi-scratch/scratch-tracker/actions/secrets/public-key',
-                {
-                    headers: {
-                        'Authorization': `Bearer ${pat}`,
-                        'Accept': 'application/vnd.github.v3+json'
-                    }
-                }
-            );
-
-            if (!keysResponse.ok) throw new Error(`Failed to get public key: ${keysResponse.status}`);
-            const keyData = await keysResponse.json();
-
-            const sodium = await import('https://cdn.jsdelivr.net/npm/libsodium.js/dist/modules/libsodium.js');
-            await sodium.ready;
-
-            const publicKey = keyData.key;
-            const keyId = keyData.key_id;
-
-            const encryptedSecret = sodium.crypto_box_seal(secretValue, sodium.from_base64(publicKey, sodium.base64_variants.ORIGINAL));
-            const encryptedB64 = sodium.to_base64(encryptedSecret, sodium.base64_variants.ORIGINAL);
-
-            const updateResponse = await fetch(
-                `https://api.github.com/repos/Fudi-scratch/scratch-tracker/actions/secrets/${secretName}`,
-                {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `Bearer ${pat}`,
-                        'Accept': 'application/vnd.github.v3+json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        encrypted_value: encryptedB64,
-                        key_id: keyId
-                    })
-                }
-            );
-
-            if (updateResponse.ok) {
-                dlog('✅ GitHub Secret が正常に更新されました！');
-            } else {
-                dlog(`❌ Secret 更新失敗: ${updateResponse.status}`);
-            }
-        } catch (e) {
-            dlog(`❌ Secret 更新エラー: ${e.message}`);
-        }
-    }
-
-    async function addNewProjectManual() {
-        // この UI は残すが、実際のデータソースは status.json のため、動作は補助的になります。
-        const urlInput = document.getElementById('urlInput');
-        const nameInput = document.getElementById('nameInput');
-        const urlText = urlInput?.value.trim() || '';
-        let nameText = nameInput?.value.trim() || '';
-
-        if (!urlText) { alert('URLまたは作品IDを入力してください'); return; }
-        const numberMatch = urlText.match(/[0-9]+/);
-        if (!numberMatch) { alert('URL、またはIDの中に数字が見つかりません。'); return; }
-        const id = numberMatch[0];
-        if (!nameText) { nameText = "作品ID: " + id; }
-
-        // 既存の localStorage の扱いは残すが、表示/グラフは status.json を優先
-        let plist = JSON.parse(localStorage.getItem('scratch_project_list')) || [];
-        plist = plist.filter(p => p.id && String(p.id) !== "null" && String(p.id) !== "undefined");
-
-        if (!plist.some(p => String(p.id) === String(id))) {
-            plist.push({ id: String(id), name: nameText });
-            localStorage.setItem('scratch_project_list', JSON.stringify(plist));
-            currentProjectId = String(id);
-            localStorage.setItem('scratch_last_selected_id', currentProjectId);
-            await initProjectList();
-            const sel = document.getElementById('projectSelect');
-            if (sel) sel.value = currentProjectId;
-            changeProject();
-            if (urlInput) urlInput.value = '';
-            if (nameInput) { nameInput.value = ''; nameInput.placeholder = '名前を自動取得...'; }
-            setStatus(`✅ 「${nameText}」を新しくリストに登録しました！`);
-            await updateGitHubSecret(plist);
-            // 手動計測は任意なので残す（ただし主データは status.json）
-            fetchAllProjectsData();
-        } else {
-            alert('この作品は既に登録されています！');
-        }
-    }
-
-    function deleteCurrentProject() {
-        const select = document.getElementById('projectSelect');
-        if (!select || select.options.length === 0) return;
-        const name = select.options[select.selectedIndex].innerText;
-        if (!confirm(`「${name}」をリストから削除しますか？\n（記録したデータも消えます）`)) return;
-
-        let plist = JSON.parse(localStorage.getItem('scratch_project_list')) || [];
-        plist = plist.filter(p => String(p.id) !== String(currentProjectId));
-        localStorage.setItem('scratch_project_list', JSON.stringify(plist));
-        localStorage.removeItem(`scratch_history_${currentProjectId}`);
-
-        initProjectList();
-        const newSelect = document.getElementById('projectSelect');
-        if (newSelect && newSelect.options.length > 0) {
-            currentProjectId = newSelect.value;
-            localStorage.setItem('scratch_last_selected_id', currentProjectId);
-            document.getElementById('currentTitle').innerText = newSelect.options[newSelect.selectedIndex].text;
-        } else {
-            currentProjectId = '';
-            document.getElementById('currentTitle').innerText = '作品統計グラフ';
-        }
-        drawChart();
-        setStatus('🗑️ 削除しました');
-
-        updateGitHubSecret(plist);
-    }
-
-    function changeProject() {
-        const select = document.getElementById('projectSelect');
-        if (select && select.options.length > 0) {
-            currentProjectId = select.value;
-            localStorage.setItem('scratch_last_selected_id', currentProjectId);
-            document.getElementById('currentTitle').innerText = select.options[select.selectedIndex].text;
-        }
-        drawChart();
-    }
-
-    async function fetchAllProjectsData() {
-        // 既存の「一括計測」機能は残します（local実行向け）。status.json が正しいデータソースです。
-        const select = document.getElementById('projectSelect');
-        if (!select) return;
-        const debug = document.getElementById('debugLog');
-        if (debug) { debug.textContent = '--- 計測開始 ---'; debug.style.display = 'block'; }
-
-        let plist = [];
-        for (let i = 0; i < select.options.length; i++) {
-            const opt = select.options[i];
-            const pId = String(opt.value).trim();
-            if (!pId || pId === "null" || pId === "undefined") continue;
-            const rawText = opt.innerText;
-            const lastIdx = rawText.lastIndexOf(' (');
-            const cleanName = lastIdx !== -1 ? rawText.substring(0, lastIdx) : rawText;
-            plist.push({ id: pId, name: cleanName });
-        }
-
-        dlog(`対象作品数: ${plist.length}`);
-        if (plist.length === 0) { setStatus("⚠️ 登録されている作品がありません。"); return; }
-
-        setStatus(`⏳ 公式サーバーから ${plist.length} 個の作品を直接計測中...`);
-        let successCount = 0;
-        let logNames = [];
-
-        await Promise.all(plist.map(async (p) => {
-            const pId = String(p.id);
-            dlog(`fetch開始: ${pId}`);
-            try {
-                const res = await fetch(proxyUrl(`https://api.scratch.mit.edu/projects/${pId}`));
-                dlog(`レスポンス: ${pId} → status=${res.status}`);
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                const data = await res.json();
-                dlog(`データ: ${pId} → views=${data?.stats?.views}`);
-
-                if (data && data.stats) {
-                    const stats = data.stats;
-                    const today = new Date().toLocaleDateString('sv-SE');
-                    const storageKey = `scratch_history_${pId}`;
-                    let savedData = JSON.parse(localStorage.getItem(storageKey)) || [];
-                    const newRecord = {
-                        date: today,
-                        views: parseInt(stats.views) || 0,
-                        loves: parseInt(stats.loves) || 0,
-                        favorites: parseInt(stats.favorites) || 0
-                    };
-                    if (savedData.length > 0 && savedData[savedData.length - 1].date === today) {
-                        savedData[savedData.length - 1] = newRecord;
-                    } else {
-                        savedData.push(newRecord);
-                    }
-                    localStorage.setItem(storageKey, JSON.stringify(savedData));
-                    dlog(`保存完了: ${p.name} views=${newRecord.views}`);
-                    successCount++;
-                    logNames.push(p.name);
-                } else {
-                    dlog(`⚠️ stats なし: ${pId}`);
-                }
-            } catch (e) {
-                dlog(`❌ エラー: ${pId} → ${e.message}`);
-            }
-        }));
-
-        setStatus(`✅ 計測完了！次の ${successCount} 個のグラフを更新しました：[ ${logNames.join(', ')} ]`);
-        drawChart();
-    }
-
-    function drawChart() {
-      // status.json の STATUS_DATA から currentProjectId のデータを使う
-      const project = STATUS_DATA.projects.find(p => String(p.id) === String(currentProjectId));
-      const savedData = (project && Array.isArray(project.data)) ? project.data : [];
-
-      const svg = document.getElementById('lineChart');
-      if (!svg) return;
-      svg.innerHTML = '';
-      if (savedData.length < 1) return;
-
-      const width = svg.clientWidth || 600;
-      const height = svg.clientHeight || 250;
-      const padding = 20;
-
-      const allViews = savedData.map(d => d.views);
-      const maxViews = Math.max(...allViews) || 10;
-      const minViews = Math.min(...allViews) || 0;
-      const viewRange = (maxViews - minViews) === 0 ? 10 : (maxViews - minViews);
-
-      const allLoves = savedData.map(d => d.loves);
-      const maxLoves = Math.max(...allLoves) || 10;
-      const minLoves = Math.min(...allLoves) || 0;
-      const loveRange = (maxLoves - minLoves) === 0 ? 10 : (maxLoves - minLoves);
-
-      const allFavs = savedData.map(d => d.favorites);
-      const maxFavs = Math.max(...allFavs) || 10;
-      const minFavs = Math.min(...allFavs) || 0;
-      const favRange = (maxFavs - minFavs) === 0 ? 10 : (maxFavs - minFavs);
-
-      const totalPoints = savedData.length;
-      const xStep = totalPoints > 1 ? (width - padding * 2) / (totalPoints - 1) : (width - padding * 2);
-
-      let viewPoints = [], lovePoints = [], favPoints = [];
-      savedData.forEach((item, index) => {
-        const x = totalPoints > 1 ? padding + index * xStep : width / 2;
-        const yView = height - padding - ((item.views - minViews) / viewRange) * (height - padding * 2);
-        const yLove = height - padding - ((item.loves - minLoves) / loveRange) * (height - padding * 2);
-        const yFav  = height - padding - ((item.favorites - minFavs) / favRange) * (height - padding * 2);
-        viewPoints.push(`${x},${yView}`);
-        lovePoints.push(`${x},${yLove}`);
-        favPoints.push(`${x},${yFav}`);
-        if (totalPoints <= 7 || index === 0 || index === totalPoints - 1) {
-          createSvgText(svg, x, height + 15, (item.date || '').slice(5), '#777');
-          createSvgText(svg, x, yView - 8, item.views, '#3498db');
-        }
-        createSvgCircle(svg, x, yView, '#3498db');
-        createSvgCircle(svg, x, yLove, '#2ecc71');
-        createSvgCircle(svg, x, yFav, '#f1c40f');
-      });
-      if (totalPoints > 1) {
-        createSvgLine(svg, viewPoints.join(' '), '#3498db', 3);
-        createSvgLine(svg, lovePoints.join(' '), '#2ecc71', 2);
-        createSvgLine(svg, favPoints.join(' '), '#f1c40f', 2);
+    let viewPoints = [], lovePoints = [], favPoints = [];
+    savedData.forEach((item, index) => {
+      const x = totalPoints > 1 ? padding + index * xStep : width / 2;
+      const yView = height - padding - ((item.views - minViews) / viewRange) * (height - padding * 2);
+      const yLove = height - padding - ((item.loves - minLoves) / loveRange) * (height - padding * 2);
+      const yFav = height - padding - ((item.favorites - minFavs) / favRange) * (height - padding * 2);
+      viewPoints.push(`${x},${yView}`);
+      lovePoints.push(`${x},${yLove}`);
+      favPoints.push(`${x},${yFav}`);
+      if (totalPoints <= 7 || index === 0 || index === totalPoints - 1) {
+        createSvgText(svg, x, height + 15, (item.date || '').slice(5), '#5B6672');
+        createSvgText(svg, x, yView - 8, item.views, '#2F6FA8');
       }
+      createSvgCircle(svg, x, yView, '#2F6FA8');
+      createSvgCircle(svg, x, yLove, '#C25B4A');
+      createSvgCircle(svg, x, yFav, '#B4881F');
+    });
+    if (totalPoints > 1) {
+      createSvgLine(svg, viewPoints.join(' '), '#2F6FA8', 3);
+      createSvgLine(svg, lovePoints.join(' '), '#C25B4A', 2);
+      createSvgLine(svg, favPoints.join(' '), '#B4881F', 2);
     }
+  }
 
-    function createSvgLine(svg, points, color, width) {
-        const line = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
-        line.setAttribute('points', points); line.setAttribute('fill', 'none');
-        line.setAttribute('stroke', color); line.setAttribute('stroke-width', width);
-        line.setAttribute('stroke-linecap', 'round'); line.setAttribute('stroke-linejoin', 'round');
-        svg.appendChild(line);
-    }
+  function createSvgLine(svg, points, color, width) {
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+    line.setAttribute('points', points); line.setAttribute('fill', 'none');
+    line.setAttribute('stroke', color); line.setAttribute('stroke-width', width);
+    line.setAttribute('stroke-linecap', 'round'); line.setAttribute('stroke-linejoin', 'round');
+    svg.appendChild(line);
+  }
 
-    function createSvgCircle(svg, cx, cy, color) {
-        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        circle.setAttribute('cx', cx); circle.setAttribute('cy', cy); circle.setAttribute('r', '4');
-        circle.setAttribute('fill', color); svg.appendChild(circle);
-    }
+  function createSvgCircle(svg, cx, cy, color) {
+    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    circle.setAttribute('cx', cx); circle.setAttribute('cy', cy); circle.setAttribute('r', '4');
+    circle.setAttribute('fill', color); svg.appendChild(circle);
+  }
 
-    function createSvgText(svg, x, y, textContent, color) {
-        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        text.setAttribute('x', x); text.setAttribute('y', y);
-        text.className.baseVal = 'tooltip'; text.setAttribute('fill', color);
-        text.textContent = textContent; svg.appendChild(text);
-    }
+  function createSvgText(svg, x, y, textContent, color) {
+    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    text.setAttribute('x', x); text.setAttribute('y', y);
+    text.setAttribute('class', 'tooltip'); text.setAttribute('fill', color);
+    text.textContent = textContent; svg.appendChild(text);
+  }
 
-    function exportTxt() {
-      const plist = Array.isArray(STATUS_DATA.projects) && STATUS_DATA.projects.length ? STATUS_DATA.projects : DEFAULT_PROJECTS;
-      if (plist.length === 0) { alert('登録されている作品がありません。'); return; }
+  function exportTxt() {
+    const plist = Array.isArray(STATUS_DATA.projects) && STATUS_DATA.projects.length ? STATUS_DATA.projects : DEFAULT_PROJECTS;
+    if (plist.length === 0) { alert('登録されている作品がありません。'); return; }
 
-      const allDataMap = {};
-      const allDatesSet = new Set();
-      plist.forEach(p => {
-        const data = Array.isArray(p.data) ? p.data : [];
-        allDataMap[p.id] = {};
-        data.forEach(record => {
-          allDataMap[p.id][record.date] = record;
-          allDatesSet.add(record.date);
-        });
+    const allDataMap = {};
+    const allDatesSet = new Set();
+    plist.forEach(p => {
+      const data = Array.isArray(p.data) ? p.data : [];
+      allDataMap[p.id] = {};
+      data.forEach(record => {
+        allDataMap[p.id][record.date] = record;
+        allDatesSet.add(record.date);
       });
+    });
 
-      const allDates = Array.from(allDatesSet).sort();
+    const allDates = Array.from(allDatesSet).sort();
 
-      const blocks = plist.map(p => {
-        let lines = [p.name || ('作品 ' + p.id)];
-        allDates.forEach(date => {
-          const record = allDataMap[p.id][date];
-          if (record) {
-            lines.push(String(record.views));
-            lines.push(String(record.loves));
-            lines.push(String(record.favorites));
-          } else {
-            lines.push('');
-            lines.push('');
-            lines.push('');
-          }
-        });
-        return lines.join('\n');
+    const blocks = plist.map(p => {
+      let lines = [p.name || ('作品 ' + p.id)];
+      allDates.forEach(date => {
+        const record = allDataMap[p.id][date];
+        if (record) {
+          lines.push(String(record.views));
+          lines.push(String(record.loves));
+          lines.push(String(record.favorites));
+        } else {
+          lines.push('');
+          lines.push('');
+          lines.push('');
+        }
       });
+      return lines.join('\n');
+    });
 
-      const output = blocks.join('\n\n');
-      const blob = new Blob([output], { type: 'text/plain' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'scratch_stats.txt';
-      a.click();
-    }
+    const output = blocks.join('\n\n');
+    const blob = new Blob([output], { type: 'text/plain' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'scratch_stats.txt';
+    a.click();
+  }
 </script>
 </body>
 </html>
